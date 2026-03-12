@@ -1,0 +1,59 @@
+{% extends 'hello/base.html' %}
+
+{% block title %}Rock Cannon Map{% endblock %}
+{% block body_class %}map-page{% endblock %}
+
+{% block content %}
+<div class="map-layout">
+    <div id="map" class="map-canvas"></div>
+    <aside class="map-sidebar">
+        <div class="map-sidebar__header">
+            <h1>Map View</h1>
+            <p class="muted">Explore rock cannons and open details.</p>
+        </div>
+        <div class="map-sidebar__list">
+            {% for cannon in cannons %}
+                <div class="map-card">
+                    <h3>{{ cannon.name }}</h3>
+                    <p class="muted">{{ cannon.address|default:"No address yet" }}</p>
+                    <p class="muted">{{ cannon.latitude }}, {{ cannon.longitude }}</p>
+                    <a class="btn" href="{% url 'cannon_detail' cannon.slug %}">View details</a>
+                </div>
+            {% empty %}
+                <div class="map-card">
+                    <p class="muted">No rock cannons added yet.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </aside>
+</div>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    var map = L.map('map').setView([52.9, -4.2], 10);
+
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    var cannons = [
+        {% for cannon in cannons %}
+            {% if cannon.latitude and cannon.longitude %}
+                {
+                    name: "{{ cannon.name|escapejs }}",
+                    lat: {{ cannon.latitude }},
+                    lng: {{ cannon.longitude }},
+                    url: "{% url 'cannon_detail' cannon.slug %}"
+                },
+            {% endif %}
+        {% endfor %}
+    ];
+
+    cannons.forEach(function(cannon) {
+        L.marker([cannon.lat, cannon.lng])
+            .addTo(map)
+            .bindPopup('<strong>' + cannon.name + '</strong><br><a href="' + cannon.url + '">View details</a>');
+    });
+</script>
+{% endblock %}
