@@ -30,15 +30,11 @@ def map_view(request):
 
 
 def cannon_list(request):
-    query = request.GET.get("q", "")
-
     cannons = RockCannon.objects.all().order_by("name")
-    if query:
-        cannons = cannons.filter(name__icontains=query)
     return render(
         request,
         "hello/cannon_list.html",
-        {"cannons": cannons, "query": query},
+        {"cannons": cannons},
     )
 
 

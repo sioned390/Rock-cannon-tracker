@@ -1,39 +1,40 @@
 {% extends 'hello/base.html' %}
+{% load i18n %}
 
 {% block title %}{{ cannon.name }}{% endblock %}
 
 {% block content %}
 <div class="card">
     <h1>{{ cannon.name }}</h1>
-    <p class="muted">Status: {{ cannon.get_status_display }}</p>
+    <p class="muted">{% trans "Status" %}: {{ cannon.get_status_display }}</p>
     <p>{{ cannon.summary }}</p>
-    <h3>Local history</h3>
-    <p>{{ cannon.history|default:"No history added yet." }}</p>
-    <h3>Location</h3>
-    <p>{{ cannon.address|default:"No address yet." }}</p>
+    <h3>{% trans "Local history" %}</h3>
+    <p>{{ cannon.history|default:_('No history added yet.') }}</p>
+    <h3>{% trans "Location" %}</h3>
+    <p>{{ cannon.address|default:_('No address yet.') }}</p>
     <p class="muted">{{ cannon.latitude }}, {{ cannon.longitude }}</p>
 </div>
 
 <div class="grid">
     <div class="card">
-        <h2>Walking & hiking trails</h2>
+        <h2>{% trans "Walking & hiking trails" %}</h2>
         <ul>
             {% for trail in cannon.trails.all %}
                 <li>
                     {{ trail.name }}
                     {% if trail.map_url %}
-                        - <a href="{{ trail.map_url }}">Map link</a>
+                        - <a href="{{ trail.map_url }}">{% trans "Map link" %}</a>
                     {% endif %}
                 </li>
             {% empty %}
-                <li class="muted">No trail data yet.</li>
+                <li class="muted">{% trans "No trail data yet." %}</li>
             {% endfor %}
         </ul>
     </div>
 </div>
 
 <div class="card">
-    <h2>Photos</h2>
+    <h2>{% trans "Photos" %}</h2>
     <div class="grid">
         {% for photo in cannon.photos.all %}
             <div>
@@ -41,35 +42,35 @@
                 <p class="muted">{{ photo.caption }}</p>
             </div>
         {% empty %}
-            <p class="muted">No photos yet.</p>
+            <p class="muted">{% trans "No photos yet." %}</p>
         {% endfor %}
     </div>
 </div>
 
 <div class="card">
-    <h2>Upload a photo</h2>
+    <h2>{% trans "Upload a photo" %}</h2>
     <form method="post" enctype="multipart/form-data" action="{% url 'upload_photo' %}">
         {% csrf_token %}
         {{ photo_form.as_p }}
-        <button class="btn" type="submit">Upload photo</button>
+        <button class="btn" type="submit">{% trans "Upload photo" %}</button>
     </form>
 </div>
 
 <div class="card">
-    <h2>Comments</h2>
+    <h2>{% trans "Comments" %}</h2>
     <form method="post" action="{% url 'add_comment' cannon.slug %}">
         {% csrf_token %}
         {{ comment_form.as_p }}
-        <button class="btn" type="submit">Add comment</button>
+        <button class="btn" type="submit">{% trans "Add comment" %}</button>
     </form>
     <ul>
         {% for comment in cannon.comments.all %}
             <li>
-                <strong>{{ comment.user|default:"Anonymous" }}</strong> - {{ comment.created_at|date:"Y-m-d" }}<br />
+                <strong>{{ comment.user|default:_('Anonymous') }}</strong> - {{ comment.created_at|date:"Y-m-d" }}<br />
                 {{ comment.body }}
             </li>
         {% empty %}
-            <li class="muted">No comments yet.</li>
+            <li class="muted">{% trans "No comments yet." %}</li>
         {% endfor %}
     </ul>
 </div>

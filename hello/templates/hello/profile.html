@@ -1,19 +1,20 @@
 {% extends 'hello/base.html' %}
+{% load i18n %}
 
-{% block title %}My Profile{% endblock %}
+{% block title %}{% trans "My Profile" %}{% endblock %}
 
 {% block content %}
 <div class="card">
-    <h1>Contributor Profile</h1>
+    <h1>{% trans "Contributor Profile" %}</h1>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
-        <button class="btn" type="submit">Save profile</button>
+        <button class="btn" type="submit">{% trans "Save profile" %}</button>
     </form>
 </div>
 
 <div class="card">
-    <h2>My uploaded photos</h2>
+    <h2>{% trans "My uploaded photos" %}</h2>
     <div class="grid">
         {% for photo in photos %}
             <div>
@@ -21,18 +22,18 @@
                 <p class="muted">{{ photo.caption }}</p>
             </div>
         {% empty %}
-            <p class="muted">No photos yet.</p>
+            <p class="muted">{% trans "No photos yet." %}</p>
         {% endfor %}
     </div>
 </div>
 
 <div class="card">
-    <h2>My comments</h2>
+    <h2>{% trans "My comments" %}</h2>
     <ul>
         {% for comment in comments %}
             <li>{{ comment.rock_cannon.name }} - {{ comment.body }}</li>
         {% empty %}
-            <li class="muted">No comments yet.</li>
+            <li class="muted">{% trans "No comments yet." %}</li>
         {% endfor %}
     </ul>
 </div>

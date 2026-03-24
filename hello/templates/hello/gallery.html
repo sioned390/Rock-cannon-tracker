@@ -1,11 +1,12 @@
 {% extends 'hello/base.html' %}
+{% load i18n %}
 
-{% block title %}Gallery{% endblock %}
+{% block title %}{% trans "Gallery" %}{% endblock %}
 
 {% block content %}
 <div class="card">
-    <h1>Rock Cannon Gallery</h1>
-    <p class="muted">Browse photos uploaded by contributors.</p>
+    <h1>{% trans "Rock Cannon Gallery" %}</h1>
+    <p class="muted">{% trans "Browse photos uploaded by contributors." %}</p>
 </div>
 
 <div class="grid">
@@ -14,11 +15,11 @@
             <img class="responsive" src="{% url 'photo_image' photo.id %}" alt="{{ photo.caption }}" />
             <h3>{{ photo.rock_cannon.name }}</h3>
             <p class="muted">{{ photo.caption }}</p>
-            <a class="btn" href="{% url 'cannon_detail' photo.rock_cannon.slug %}">View rock cannon</a>
+            <a class="btn" href="{% url 'cannon_detail' photo.rock_cannon.slug %}">{% trans "View rock cannon" %}</a>
         </div>
     {% empty %}
         <div class="card">
-            <p class="muted">No photos yet.</p>
+            <p class="muted">{% trans "No photos yet." %}</p>
         </div>
     {% endfor %}
 </div>

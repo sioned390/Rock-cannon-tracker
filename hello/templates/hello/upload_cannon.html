@@ -1,18 +1,19 @@
 {% extends 'hello/base.html' %}
+{% load i18n %}
 
-{% block title %}Upload Rock Cannon{% endblock %}
+{% block title %}{% trans "Upload Rock Cannon" %}{% endblock %}
 
 {% block content %}
 <div class="card">
-    <h1>Upload a new rock cannon</h1>
-    <p class="muted">Share new discoveries with the community.</p>
+    <h1>{% trans "Upload a new rock cannon" %}</h1>
+    <p class="muted">{% trans "Share new discoveries with the community." %}</p>
 </div>
 
 <div class="card">
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button class="btn" type="submit">Submit</button>
+        <button class="btn" type="submit">{% trans "Submit" %}</button>
     </form>
 </div>
 {% endblock %}

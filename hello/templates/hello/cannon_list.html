@@ -1,29 +1,25 @@
 {% extends 'hello/base.html' %}
+{% load i18n %}
 
-{% block title %}Rock Cannons{% endblock %}
+{% block title %}Rock Cannon Tracker{% endblock %}
 
 {% block content %}
 <div class="card">
-    <h1>Rock Cannons</h1>
-    <form method="get">
-        <label for="q">Search by name</label>
-        <input id="q" type="text" name="q" value="{{ query }}" />
-        <button class="btn" type="submit">Apply</button>
-    </form>
+    <h1>{% trans "Rock Cannons" %}</h1>
 </div>
 
 <div class="grid">
     {% for cannon in cannons %}
         <div class="card">
             <h3>{{ cannon.name }}</h3>
-            <p class="muted">{{ cannon.summary|default:"No summary yet" }}</p>
+            <p class="muted">{{ cannon.summary|default:_('No summary yet') }}</p>
             <div style="margin-top: 1rem;">
-                <a class="btn" href="{% url 'cannon_detail' cannon.slug %}">View details</a>
+                <a class="btn" href="{% url 'cannon_detail' cannon.slug %}">{% trans "View details" %}</a>
             </div>
         </div>
     {% empty %}
         <div class="card">
-            <p class="muted">No rock cannons found.</p>
+            <p class="muted">{% trans "No rock cannons found." %}</p>
         </div>
     {% endfor %}
 </div>

@@ -1,0 +1,180 @@
+# Welsh translations for Rock Cannon Tracker
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: cy\n"
+
+msgid "List"
+msgstr "Rhestr"
+
+msgid "Map"
+msgstr "Map"
+
+msgid "Gallery"
+msgstr "Oriel"
+
+msgid "Upload"
+msgstr "Lanlwytho"
+
+msgid "My Profile"
+msgstr "Fy proffil"
+
+msgid "Sign out"
+msgstr "Allgofnodi"
+
+msgid "Sign in"
+msgstr "Mewngofnodi"
+
+msgid "Register"
+msgstr "Cofrestru"
+
+msgid "What Are Rock Cannons?"
+msgstr "Beth Yw Canonau Cerrig?"
+
+msgid "Discover rare geological and historical formations across the region. Learn their stories, plan visits, and help protect them for future explorers."
+msgstr "Darganfyddwch ffurfiadau daearegol a hanesyddol prin ar draws y rhanbarth. Dysgwch eu straeon, cynlluniwch ymweliadau, a helpwch i'w gwarchod ar gyfer archwilwyr y dyfodol."
+
+msgid "Learn More"
+msgstr "Dysgu Mwy"
+
+msgid "Interactive Map"
+msgstr "Map Rhyngweithiol"
+
+msgid "Find a specific rock cannon or explore nearby locations."
+msgstr "Dewch o hyd i ganon carreg penodol neu archwilio lleoliadau cyfagos."
+
+msgid "View Gallery"
+msgstr "Gweld yr Oriel"
+
+msgid "See what the community has posted about each rock cannon."
+msgstr "Gweld beth mae'r gymuned wedi'i bostio am bob canon carreg."
+
+msgid "Add a Cannon"
+msgstr "Ychwanegu Canon"
+
+msgid "Found a new cannon? Add it and share the discovery."
+msgstr "Wedi dod o hyd i ganon newydd? Ychwanegwch ef a rhannu'r darganfyddiad."
+
+msgid "Rock Cannons"
+msgstr "Canonau Cerrig"
+
+msgid "No summary yet"
+msgstr "Dim crynodeb eto"
+
+msgid "View details"
+msgstr "Gweld manylion"
+
+msgid "No rock cannons found."
+msgstr "Ni chanfuwyd unrhyw ganonau cerrig."
+
+msgid "Status"
+msgstr "Statws"
+
+msgid "Local history"
+msgstr "Hanes lleol"
+
+msgid "No history added yet."
+msgstr "Dim hanes wedi'i ychwanegu eto."
+
+msgid "Location"
+msgstr "Lleoliad"
+
+msgid "No address yet."
+msgstr "Dim cyfeiriad eto."
+
+msgid "Walking & hiking trails"
+msgstr "Llwybrau cerdded a heicio"
+
+msgid "Map link"
+msgstr "Dolen map"
+
+msgid "No trail data yet."
+msgstr "Dim data llwybr eto."
+
+msgid "Photos"
+msgstr "Ffotograffau"
+
+msgid "No photos yet."
+msgstr "Dim ffotograffau eto."
+
+msgid "Upload a photo"
+msgstr "Lanlwytho ffotograff"
+
+msgid "Upload photo"
+msgstr "Lanlwytho ffotograff"
+
+msgid "Comments"
+msgstr "Sylwadau"
+
+msgid "Add comment"
+msgstr "Ychwanegu sylw"
+
+msgid "Anonymous"
+msgstr "Anhysbys"
+
+msgid "No comments yet."
+msgstr "Dim sylwadau eto."
+
+msgid "Rock Cannon Map"
+msgstr "Map Canonau Cerrig"
+
+msgid "Map View"
+msgstr "Golwg Map"
+
+msgid "Explore rock cannons and open details."
+msgstr "Archwilio canonau cerrig ac agor manylion."
+
+msgid "No address yet"
+msgstr "Dim cyfeiriad eto"
+
+msgid "No rock cannons added yet."
+msgstr "Dim canonau cerrig wedi'u hychwanegu eto."
+
+msgid "Rock Cannon Gallery"
+msgstr "Oriel Canonau Cerrig"
+
+msgid "Browse photos uploaded by contributors."
+msgstr "Pori ffotograffau a lwythwyd gan gyfranwyr."
+
+msgid "View rock cannon"
+msgstr "Gweld y canon carreg"
+
+msgid "Upload Rock Cannon"
+msgstr "Lanlwytho Canon Carreg"
+
+msgid "Upload a new rock cannon"
+msgstr "Lanlwytho canon carreg newydd"
+
+msgid "Share new discoveries with the community."
+msgstr "Rhannu darganfyddiadau newydd gyda'r gymuned."
+
+msgid "Submit"
+msgstr "Cyflwyno"
+
+msgid "Contributor Profile"
+msgstr "Proffil Cyfranwr"
+
+msgid "Save profile"
+msgstr "Cadw proffil"
+
+msgid "My uploaded photos"
+msgstr "Fy ffotograffau wedi'u lanlwytho"
+
+msgid "My comments"
+msgstr "Fy sylwadau"
+
+msgid "Create account"
+msgstr "Creu cyfrif"
+
+msgid "Create an account"
+msgstr "Creu cyfrif"
+
+msgid "Already have an account?"
+msgstr "Eisoes yn berchen ar gyfrif?"
+
+msgid "Need an account?"
+msgstr "Angen cyfrif?"
+
+msgid "Create one"
+msgstr "Crëwch un"

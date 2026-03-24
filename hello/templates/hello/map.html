@@ -1,6 +1,7 @@
 {% extends 'hello/base.html' %}
+{% load i18n %}
 
-{% block title %}Rock Cannon Map{% endblock %}
+{% block title %}{% trans "Rock Cannon Map" %}{% endblock %}
 {% block body_class %}map-page{% endblock %}
 
 {% block content %}
@@ -8,20 +9,20 @@
     <div id="map" class="map-canvas"></div>
     <aside class="map-sidebar">
         <div class="map-sidebar__header">
-            <h1>Map View</h1>
-            <p class="muted">Explore rock cannons and open details.</p>
+            <h1>{% trans "Map View" %}</h1>
+            <p class="muted">{% trans "Explore rock cannons and open details." %}</p>
         </div>
         <div class="map-sidebar__list">
             {% for cannon in cannons %}
                 <div class="map-card">
                     <h3>{{ cannon.name }}</h3>
-                    <p class="muted">{{ cannon.address|default:"No address yet" }}</p>
+                    <p class="muted">{{ cannon.address|default:_('No address yet') }}</p>
                     <p class="muted">{{ cannon.latitude }}, {{ cannon.longitude }}</p>
-                    <a class="btn" href="{% url 'cannon_detail' cannon.slug %}">View details</a>
+                    <a class="btn" href="{% url 'cannon_detail' cannon.slug %}">{% trans "View details" %}</a>
                 </div>
             {% empty %}
                 <div class="map-card">
-                    <p class="muted">No rock cannons added yet.</p>
+                    <p class="muted">{% trans "No rock cannons added yet." %}</p>
                 </div>
             {% endfor %}
         </div>

@@ -1,13 +1,13 @@
+{% load static i18n %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
  <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{% block title %}Rock Cannons{% endblock %}</title>
+    <title>{% block title %}Rock Cannon Tracker{% endblock %}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-    {% load static %}
     <link rel="stylesheet" href="{% static 'hello/styles.css' %}" />
     {% block extra_head %}{% endblock %}
 </head>
@@ -15,20 +15,32 @@
     <header>
         <nav>
             <div>
-                <a href="{% url 'home' %}">Rock Cannons</a>
-                <a href="{% url 'cannon_list' %}">List</a>
-                <a href="{% url 'map_view' %}">Map</a>
-                <a href="{% url 'gallery' %}">Gallery</a>
-                <a href="{% url 'upload_cannon' %}">Upload</a>
+                <a href="{% url 'home' %}">Rock Cannon Tracker</a>
+                <a href="{% url 'cannon_list' %}">{% trans "List" %}</a>
+                <a href="{% url 'map_view' %}">{% trans "Map" %}</a>
+                <a href="{% url 'gallery' %}">{% trans "Gallery" %}</a>
+                <a href="{% url 'upload_cannon' %}">{% trans "Upload" %}</a>
             </div>
             <div>
                 {% if user.is_authenticated %}
-                    <a href="{% url 'profile' %}">My Profile</a>
-                    <a href="{% url 'logout' %}">Sign out</a>
+                    <a href="{% url 'profile' %}">{% trans "My Profile" %}</a>
+                    <a href="{% url 'logout' %}">{% trans "Sign out" %}</a>
                 {% else %}
-                    <a href="{% url 'login' %}">Sign in</a>
-                    <a href="{% url 'signup' %}">Register</a>
+                    <a href="{% url 'login' %}">{% trans "Sign in" %}</a>
+                    <a href="{% url 'signup' %}">{% trans "Register" %}</a>
                 {% endif %}
+                <form action="{% url 'set_language' %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <input name="next" type="hidden" value="{{ request.path }}" />
+                    {% get_current_language as CURRENT_LANG %}
+                    {% if CURRENT_LANG == 'cy' %}
+                        <input name="language" type="hidden" value="en" />
+                        <button class="btn" type="submit">English</button>
+                    {% else %}
+                        <input name="language" type="hidden" value="cy" />
+                        <button class="btn" type="submit">Cymraeg</button>
+                    {% endif %}
+                </form>
             </div>
         </nav>
     </header>

@@ -1,5 +1,5 @@
 {% extends 'hello/base.html' %}
-{% load static %}
+{% load static i18n %}
 
 {% block title %}Rock Cannon Tracker{% endblock %}
 
@@ -7,21 +7,11 @@
 <section class="hero-banner" style="background-image: url('{% static 'Rockcannon imgs/rock-cannon-20110212-gefnan-mynydd-llandegai-02.jpg' %}');">
     <div class="hero-panel">
         <div class="hero-glass">
-            <h1>What Are Rock Cannons?</h1>
+            <h1>{% trans "What Are Rock Cannons?" %}</h1>
             <p>
-                Discover rare geological and historical formations across the region. Learn their stories,
-                plan visits, and help protect them for future explorers.
+                {% trans "Discover rare geological and historical formations across the region. Learn their stories, plan visits, and help protect them for future explorers." %}
             </p>
-            <a class="btn ghost" href="{% url 'cannon_list' %}">Learn More</a>
-        </div>
-    </div>
-    <div class="hero-panel">
-        <div class="hero-glass">
-            <h2>Search For Rock Cannons</h2>
-            <form class="hero-search-form" method="get" action="{% url 'cannon_list' %}">
-                <input type="text" name="q" placeholder="Search" />
-                <button class="btn icon" type="submit">🔍</button>
-            </form>
+            <a class="btn ghost" href="{% url 'cannon_list' %}">{% trans "Learn More" %}</a>
         </div>
     </div>
 </section>
@@ -29,20 +19,20 @@
 <section class="home-cards">
     <a class="image-card" href="{% url 'map_view' %}" style="background-image: url('{% static 'Rockcannon imgs/Rock-cannon-at-Betws.jpg' %}');">
         <div class="image-card__glass">
-            <h3>Interactive Map</h3>
-            <p>Find a specific rock cannon or explore nearby locations.</p>
+            <h3>{% trans "Interactive Map" %}</h3>
+            <p>{% trans "Find a specific rock cannon or explore nearby locations." %}</p>
         </div>
     </a>
     <a class="image-card" href="{% url 'gallery' %}" style="background-image: url('{% static 'Rockcannon imgs/images.jpeg' %}');">
         <div class="image-card__glass">
-            <h3>View Gallery</h3>
-            <p>See what the community has posted about each rock cannon.</p>
+            <h3>{% trans "View Gallery" %}</h3>
+            <p>{% trans "See what the community has posted about each rock cannon." %}</p>
         </div>
     </a>
     <a class="image-card" href="{% url 'upload_cannon' %}" style="background-image: url('{% static 'Rockcannon imgs/images (1).jpeg' %}');">
         <div class="image-card__glass">
-            <h3>Add a Cannon</h3>
-            <p>Found a new cannon? Add it and share the discovery.</p>
+            <h3>{% trans "Add a Cannon" %}</h3>
+            <p>{% trans "Found a new cannon? Add it and share the discovery." %}</p>
         </div>
     </a>
 </section>
