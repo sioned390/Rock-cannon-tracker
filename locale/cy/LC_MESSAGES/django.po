@@ -1,180 +1,488 @@
 # Welsh translations for Rock Cannon Tracker
 msgid ""
 msgstr ""
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-04-03 14:22+0000\n"
+"Language: cy\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: cy\n"
 
-msgid "List"
-msgstr "Rhestr"
+#: hello/templates/hello/about.html:4 hello/templates/hello/base.html:25
+msgid "About"
+msgstr "Amdanom"
 
-msgid "Map"
-msgstr "Map"
-
-msgid "Gallery"
-msgstr "Oriel"
-
-msgid "Upload"
-msgstr "Lanlwytho"
-
-msgid "My Profile"
-msgstr "Fy proffil"
-
-msgid "Sign out"
-msgstr "Allgofnodi"
-
-msgid "Sign in"
-msgstr "Mewngofnodi"
-
-msgid "Register"
-msgstr "Cofrestru"
-
+#: hello/templates/hello/about.html:11 hello/templates/hello/home.html:22
 msgid "What Are Rock Cannons?"
 msgstr "Beth Yw Canonau Cerrig?"
 
-msgid "Discover rare geological and historical formations across the region. Learn their stories, plan visits, and help protect them for future explorers."
-msgstr "Darganfyddwch ffurfiadau daearegol a hanesyddol prin ar draws y rhanbarth. Dysgwch eu straeon, cynlluniwch ymweliadau, a helpwch i'w gwarchod ar gyfer archwilwyr y dyfodol."
+#: hello/templates/hello/about.html:13
+msgid ""
+"Rock cannons were used in the 18th and 19th centuries to create loud sounds "
+"that scared birds away from crops. They were often made from old cannons or "
+"large metal pipes and fired with gunpowder. The blast helped farmers protect "
+"their harvests."
+msgstr ""
+"Defnyddiwyd canonau cerrig yn y 18fed a'r 19eg ganrif i greu synau uchel "
+"a ddychrynai adar oddi wrth gnydau. Fe'u gwnaed yn aml o hen ganonau neu "
+"bib metel mawr ac fe'u taniwyd a phowdwr gwn. Helpodd y ffrwydrad ffermwyr "
+"i ddiogelu eu cynhaeaf."
 
-msgid "Learn More"
-msgstr "Dysgu Mwy"
+#: hello/templates/hello/about.html:16
+msgid ""
+"Today, rock cannons remain an important part of local heritage. In many "
+"places they are now fired during festivals and community events, where they "
+"represent history, identity, and tradition."
+msgstr ""
+"Heddiw, mae canonau cerrig yn parhau i fod yn rhan bwysig o dreftadaeth "
+"leol. Mewn llawer o leoedd fe'u taniwyd bellach yn ystod gwyliau a "
+"digwyddiadau cymunedol, lle maent yn cynrychioli hanes, hunaniaeth a "
+"thraddodiad."
 
-msgid "Interactive Map"
-msgstr "Map Rhyngweithiol"
+#: hello/templates/hello/about.html:21
+msgid "Rock Cannon in landscape"
+msgstr "Canon Carreg mewn tirwedd"
 
-msgid "Find a specific rock cannon or explore nearby locations."
-msgstr "Dewch o hyd i ganon carreg penodol neu archwilio lleoliadau cyfagos."
+#: hello/templates/hello/about.html:25
+msgid "Historic rock cannon site"
+msgstr "Safle canon carreg hanesyddol"
 
-msgid "View Gallery"
-msgstr "Gweld yr Oriel"
+#: hello/templates/hello/about.html:29
+msgid "Preserving Their History"
+msgstr "Cadw eu Hanes"
 
-msgid "See what the community has posted about each rock cannon."
-msgstr "Gweld beth mae'r gymuned wedi'i bostio am bob canon carreg."
+#: hello/templates/hello/about.html:31
+msgid ""
+"Preserving the history of rock cannons helps us understand the creativity "
+"and resilience of farming communities. Their story connects people to the "
+"landscape, local memory, and traditions passed down through generations."
+msgstr ""
+"Mae cadw hanes canonau cerrig yn ein helpu i ddeall creadigrwydd a "
+"gwydnwch cymunedau ffermio. Mae eu stori yn cysylltu pobl a'r dirwedd, "
+"y cof lleol, a thraddodiadau a basiwyd i lawr drwy genedlaethau."
 
-msgid "Add a Cannon"
-msgstr "Ychwanegu Canon"
+#: hello/templates/hello/about.html:34
+msgid ""
+"Keeping these sites visible and documented also supports education and "
+"tourism, helping more people discover this unique part of Welsh heritage."
+msgstr ""
+"Mae cadw'r safleoedd hyn yn weladwy ac wedi'u dogfennu hefyd yn cefnogi "
+"addysg a thwristiaeth, gan helpu mwy o bobl i ddarganfod y rhan unigryw "
+"hon o dreftadaeth Cymru."
 
-msgid "Found a new cannon? Add it and share the discovery."
-msgstr "Wedi dod o hyd i ganon newydd? Ychwanegwch ef a rhannu'r darganfyddiad."
+#: hello/templates/hello/base.html:27
+msgid "Browse"
+msgstr "Pori"
 
-msgid "Rock Cannons"
-msgstr "Canonau Cerrig"
+#: hello/templates/hello/base.html:29
+msgid "Map"
+msgstr "Map"
 
-msgid "No summary yet"
-msgstr "Dim crynodeb eto"
+#: hello/templates/hello/base.html:30
+#: hello/templates/hello/cannon_detail.html:123
+#: hello/templates/hello/gallery.html:4
+msgid "Gallery"
+msgstr "Oriel"
 
-msgid "View details"
-msgstr "Gweld manylion"
+#: hello/templates/hello/base.html:37 hello/templates/hello/profile.html:9
+msgid "My Account"
+msgstr "Fy Nghyfrif"
 
-msgid "No rock cannons found."
-msgstr "Ni chanfuwyd unrhyw ganonau cerrig."
+#: hello/templates/hello/base.html:38
+#: hello/templates/hello/upload_cannon.html:79
+msgid "Upload"
+msgstr "Lanlwytho"
 
-msgid "Status"
-msgstr "Statws"
+#: hello/templates/hello/base.html:43
+msgid "Log out"
+msgstr "Allgofnodi"
 
-msgid "Local history"
-msgstr "Hanes lleol"
+#: hello/templates/hello/base.html:49 hello/templates/registration/login.html:4
+#: hello/templates/registration/login.html:10
+#: hello/templates/registration/login.html:14
+#: hello/templates/registration/signup.html:12
+msgid "Sign in"
+msgstr "Mewngofnodi"
 
-msgid "No history added yet."
-msgstr "Dim hanes wedi'i ychwanegu eto."
+#: hello/templates/hello/base.html:50
+#: hello/templates/registration/signup.html:11
+msgid "Register"
+msgstr "Cofrestru"
 
-msgid "Location"
-msgstr "Lleoliad"
+#: hello/templates/hello/cannon_detail.html:13
+msgid "Back"
+msgstr "Yn ol"
 
-msgid "No address yet."
-msgstr "Dim cyfeiriad eto."
+#: hello/templates/hello/cannon_detail.html:17
+#, python-format
+msgid "Submitted by: %(uploader)s"
+msgstr "Wedi'i gyflwyno gan: %(uploader)s"
 
-msgid "Walking & hiking trails"
-msgstr "Llwybrau cerdded a heicio"
+#: hello/templates/hello/cannon_detail.html:19
+msgid "Submitted by: Unknown user"
+msgstr "Wedi'i gyflwyno gan: Defnyddiwr Anhysbys"
 
-msgid "Map link"
-msgstr "Dolen map"
+#: hello/templates/hello/cannon_detail.html:22
+msgid "Open map"
+msgstr "Agor y map"
 
-msgid "No trail data yet."
-msgstr "Dim data llwybr eto."
+#: hello/templates/hello/cannon_detail.html:31
+msgid "Previous photo"
+msgstr "Ffotograff blaenorol"
 
-msgid "Photos"
-msgstr "Ffotograffau"
+#: hello/templates/hello/cannon_detail.html:41
+msgid "Next photo"
+msgstr "Ffotograff nesaf"
 
+#: hello/templates/hello/cannon_detail.html:46
+#: hello/templates/hello/cannon_detail.html:163
+#: hello/templates/hello/gallery.html:45
 msgid "No photos yet."
 msgstr "Dim ffotograffau eto."
 
-msgid "Upload a photo"
-msgstr "Lanlwytho ffotograff"
+#: hello/templates/hello/cannon_detail.html:51
+#: hello/templates/hello/map.html:31
+#: hello/templates/hello/upload_cannon.html:33
+msgid "Location"
+msgstr "Lleoliad"
 
+#: hello/templates/hello/cannon_detail.html:54
+#: hello/templates/hello/map.html:32
+msgid "Map Coordinates"
+msgstr "Cyfesurynnau Map"
+
+#: hello/templates/hello/cannon_detail.html:59
+msgid "Not added"
+msgstr "Heb ei ychwanegu"
+
+#: hello/templates/hello/cannon_detail.html:64
+#: hello/templates/hello/map.html:33
+#: hello/templates/hello/upload_cannon.html:34
+msgid "Address"
+msgstr "Cyfeiriad"
+
+#: hello/templates/hello/cannon_detail.html:65
+msgid "No address yet."
+msgstr "Dim cyfeiriad eto."
+
+#: hello/templates/hello/cannon_detail.html:68
+#: hello/templates/hello/map.html:34
+#: hello/templates/hello/upload_cannon.html:38
+msgid "What3Words"
+msgstr "What3Words"
+
+#: hello/templates/hello/cannon_detail.html:69
+#: hello/templates/hello/map.html:79
+msgid "Not provided"
+msgstr "Heb ei ddarparu"
+
+#: hello/templates/hello/cannon_detail.html:73
+msgid "Details"
+msgstr "Manylion"
+
+#: hello/templates/hello/cannon_detail.html:76
+#: hello/templates/hello/upload_cannon.html:58
+msgid "Status"
+msgstr "Statws"
+
+#: hello/templates/hello/cannon_detail.html:80
+#: hello/templates/hello/map.html:122
+msgid "Photos"
+msgstr "Ffotograffau"
+
+#: hello/templates/hello/cannon_detail.html:84
+msgid "Trails"
+msgstr "Llwybrau"
+
+#: hello/templates/hello/cannon_detail.html:93
+msgid "History & Info"
+msgstr "Hanes a Gwybodaeth"
+
+#: hello/templates/hello/cannon_detail.html:94
+#: hello/templates/hello/map.html:80
+msgid "No information yet."
+msgstr "Dim gwybodaeth eto."
+
+#: hello/templates/hello/cannon_detail.html:95
+msgid "No history added yet."
+msgstr "Dim hanes wedi'i ychwanegu eto."
+
+#: hello/templates/hello/cannon_detail.html:97
+msgid "Walking & hiking trails"
+msgstr "Llwybrau cerdded a heicio"
+
+#: hello/templates/hello/cannon_detail.html:103
+msgid "Map link"
+msgstr "Dolen map"
+
+#: hello/templates/hello/cannon_detail.html:107
+msgid "No trail data yet."
+msgstr "Dim data llwybr eto."
+
+#: hello/templates/hello/cannon_detail.html:114
+msgid "Cannon location map"
+msgstr "Map lleoliad y canon"
+
+#: hello/templates/hello/cannon_detail.html:116
+msgid "No map coordinates yet."
+msgstr "Dim cyfesurynnau map eto."
+
+#: hello/templates/hello/cannon_detail.html:129
 msgid "Upload photo"
 msgstr "Lanlwytho ffotograff"
 
+#: hello/templates/hello/cannon_detail.html:151
+#, python-format
+msgid "Uploaded By: [%(uploader)s]"
+msgstr "Wedi'i Lanlwytho Gan: [%(uploader)s]"
+
+#: hello/templates/hello/cannon_detail.html:153
+msgid "Uploaded By: [Unknown user]"
+msgstr "Wedi'i Lanlwytho Gan: [Defnyddiwr Anhysbys]"
+
+#: hello/templates/hello/cannon_detail.html:157
+msgid "Open cannon details"
+msgstr "Agor manylion y canon"
+
+#: hello/templates/hello/cannon_detail.html:170
 msgid "Comments"
 msgstr "Sylwadau"
 
+#: hello/templates/hello/cannon_detail.html:178
+#: hello/templates/hello/cannon_detail.html:192
 msgid "Add comment"
 msgstr "Ychwanegu sylw"
 
+#: hello/templates/hello/cannon_detail.html:201
 msgid "Anonymous"
 msgstr "Anhysbys"
 
+#: hello/templates/hello/cannon_detail.html:206
 msgid "No comments yet."
 msgstr "Dim sylwadau eto."
 
+#: hello/templates/hello/cannon_list.html:8
+msgid "Rock Cannons"
+msgstr "Canonau Cerrig"
+
+#: hello/templates/hello/cannon_list.html:15
+msgid "No summary yet"
+msgstr "Dim crynodeb eto"
+
+#: hello/templates/hello/cannon_list.html:17
+msgid "View details"
+msgstr "Gweld manylion"
+
+#: hello/templates/hello/cannon_list.html:22
+msgid "No rock cannons found."
+msgstr "Ni chanfuwyd unrhyw ganonau cerrig."
+
+#: hello/templates/hello/filler.html:4 hello/templates/hello/filler.html:8
+msgid "Filler Page"
+msgstr "Tudalen Llenwi"
+
+#: hello/templates/hello/filler.html:9
+msgid "filler text"
+msgstr "testun llenwi"
+
+#: hello/templates/hello/gallery.html:11
+msgid "Rock cannon photo gallery"
+msgstr "Oriel ffotograffau canonau cerrig"
+
+#: hello/templates/hello/gallery.html:24
+#, python-format
+msgid ""
+"\n"
+"                                    Uploaded by %(uploader)s\n"
+"                                "
+msgstr ""
+"\n"
+"                                    Wedi'i lanlwytho gan %(uploader)s\n"
+"                                "
+
+#: hello/templates/hello/gallery.html:29
+msgid "Uploaded by Unknown user"
+msgstr "Wedi'i lanlwytho gan ddefnyddiwr anhysbys"
+
+#: hello/templates/hello/gallery.html:35
+#, python-format
+msgid "Open %(cannon_name)s details"
+msgstr "Agor manylion %(cannon_name)s"
+
+#: hello/templates/hello/home.html:11
+msgid "Beth yw Canonau Creigiau?"
+msgstr ""
+
+#: hello/templates/hello/home.html:16
+msgid "Ewch i'r Map"
+msgstr ""
+
+#: hello/templates/hello/home.html:24
+msgid ""
+"Discover rare geological and historical formations across the region. Learn "
+"their stories, plan visits, and help protect them for future explorers."
+msgstr ""
+"Darganfyddwch ffurfiadau daearegol a hanesyddol prin ar draws y rhanbarth. "
+"Dysgwch eu straeon, cynlluniwch ymweliadau, a helpwch i'w gwarchod ar gyfer "
+"archwilwyr y dyfodol."
+
+#: hello/templates/hello/home.html:26
+msgid "Continue To Map"
+msgstr "Parhau i'r Map"
+
+#: hello/templates/hello/map.html:4
 msgid "Rock Cannon Map"
 msgstr "Map Canonau Cerrig"
 
-msgid "Map View"
-msgstr "Golwg Map"
+#: hello/templates/hello/map.html:12
+msgid "Select a rock cannon"
+msgstr "Dewiswch ganon carreg"
 
-msgid "Explore rock cannons and open details."
-msgstr "Archwilio canonau cerrig ac agor manylion."
+#: hello/templates/hello/map.html:13
+msgid "Click a pin on the map to view details."
+msgstr "Cliciwch bin ar y map i weld manylion."
 
+#: hello/templates/hello/map.html:26
+msgid "No image yet"
+msgstr "Dim delwedd eto"
+
+#: hello/templates/hello/map.html:38
+#: hello/templates/hello/upload_cannon.html:25
+msgid "Information"
+msgstr "Gwybodaeth"
+
+#: hello/templates/hello/map.html:42
+msgid "Learn More"
+msgstr "Dysgu Mwy"
+
+#: hello/templates/hello/map.html:78
 msgid "No address yet"
 msgstr "Dim cyfeiriad eto"
 
-msgid "No rock cannons added yet."
-msgstr "Dim canonau cerrig wedi'u hychwanegu eto."
+#: hello/templates/hello/profile.html:4
+msgid "My Profile"
+msgstr "Fy Mhroffil"
 
-msgid "Rock Cannon Gallery"
-msgstr "Oriel Canonau Cerrig"
+#: hello/templates/hello/profile.html:27
+msgid "Change Profile Picture"
+msgstr "Newid Llun Proffil"
 
-msgid "Browse photos uploaded by contributors."
-msgstr "Pori ffotograffau a lwythwyd gan gyfranwyr."
+#: hello/templates/hello/profile.html:28
+msgid "Change"
+msgstr "Newid"
 
-msgid "View rock cannon"
-msgstr "Gweld y canon carreg"
+#: hello/templates/hello/profile.html:30
+msgid "Clear to Default"
+msgstr "Ailosod i'r Rhagosodiad"
 
+#: hello/templates/hello/profile.html:32
+msgid "Upload New Cannon"
+msgstr "Lanlwytho Canon Newydd"
+
+#: hello/templates/hello/profile.html:37
+msgid "Log Out"
+msgstr "Allgofnodi"
+
+#: hello/templates/hello/profile.html:43
+msgid "Account Info"
+msgstr "Gwybodaeth Cyfrif"
+
+#: hello/templates/hello/profile.html:47
+msgid "Username:"
+msgstr "Enw Defnyddiwr:"
+
+#: hello/templates/hello/profile.html:51
+msgid "Account Age:"
+msgstr "Oedran y Cyfrif:"
+
+#: hello/templates/hello/profile.html:55
+msgid "Account Type:"
+msgstr "Math o Gyfrif:"
+
+#: hello/templates/hello/profile.html:58
+msgid "Moderator"
+msgstr "Cymedrolwr"
+
+#: hello/templates/hello/profile.html:60
+msgid "Member"
+msgstr "Aelod"
+
+#: hello/templates/hello/profile.html:65
+msgid "Verified"
+msgstr "Dilyswyd"
+
+#: hello/templates/hello/profile.html:69
+msgid "Recovery Email:"
+msgstr "E-bost Adfer:"
+
+#: hello/templates/hello/profile.html:70
+msgid "Not set"
+msgstr "Heb ei osod"
+
+#: hello/templates/hello/profile.html:73
+msgid "Password:"
+msgstr "Cyfrinair:"
+
+#: hello/templates/hello/upload_cannon.html:4
 msgid "Upload Rock Cannon"
 msgstr "Lanlwytho Canon Carreg"
 
-msgid "Upload a new rock cannon"
-msgstr "Lanlwytho canon carreg newydd"
+#: hello/templates/hello/upload_cannon.html:9
+msgid "Upload Cannon"
+msgstr "Lanlwytho Canon"
 
+#: hello/templates/hello/upload_cannon.html:19
+msgid "Rock Cannon Name"
+msgstr "Enw'r Canon Carreg"
+
+#: hello/templates/hello/upload_cannon.html:44
+msgid "Latitude"
+msgstr "Lledred"
+
+#: hello/templates/hello/upload_cannon.html:49
+msgid "Longitude"
+msgstr "Hydred"
+
+#: hello/templates/hello/upload_cannon.html:57
+msgid "Quick Info"
+msgstr "Gwybodaeth Gyflym"
+
+#: hello/templates/hello/upload_cannon.html:66
+msgid "Add Photos"
+msgstr "Ychwanegu Ffotograffau"
+
+#: hello/templates/hello/upload_cannon.html:67
+msgid "Optional: upload one or more photos now."
+msgstr "Dewisol: lanlwythwch un neu fwy o ffotograffau nawr."
+
+#: hello/templates/hello/upload_cannon.html:71
+msgid "Add photos"
+msgstr "Ychwanegu ffotograffau"
+
+#: hello/templates/hello/upload_cannon.html:82
 msgid "Share new discoveries with the community."
 msgstr "Rhannu darganfyddiadau newydd gyda'r gymuned."
 
-msgid "Submit"
-msgstr "Cyflwyno"
-
-msgid "Contributor Profile"
-msgstr "Proffil Cyfranwr"
-
-msgid "Save profile"
-msgstr "Cadw proffil"
-
-msgid "My uploaded photos"
-msgstr "Fy ffotograffau wedi'u lanlwytho"
-
-msgid "My comments"
-msgstr "Fy sylwadau"
-
-msgid "Create account"
-msgstr "Creu cyfrif"
-
-msgid "Create an account"
-msgstr "Creu cyfrif"
-
-msgid "Already have an account?"
-msgstr "Eisoes yn berchen ar gyfrif?"
-
+#: hello/templates/registration/login.html:16
 msgid "Need an account?"
 msgstr "Angen cyfrif?"
 
+#: hello/templates/registration/login.html:16
 msgid "Create one"
-msgstr "Crëwch un"
+msgstr "Creuwch un"
+
+#: hello/templates/registration/signup.html:4
+#: hello/templates/registration/signup.html:16
+msgid "Create account"
+msgstr "Creu cyfrif"
+
+#: hello/templates/registration/signup.html:12
+msgid "Already have an account?"
+msgstr "Eisoes yn berchen ar gyfrif?"
+
+#: web_project/settings.py:113
+msgid "English"
+msgstr "Saesneg"
+
+#: web_project/settings.py:114
+msgid "Welsh"
+msgstr "Cymraeg"

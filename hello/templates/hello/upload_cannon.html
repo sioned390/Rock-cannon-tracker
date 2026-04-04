@@ -2,18 +2,190 @@
 {% load i18n %}
 
 {% block title %}{% trans "Upload Rock Cannon" %}{% endblock %}
+{% block body_class %}upload-page{% endblock %}
 
 {% block content %}
-<div class="card">
-    <h1>{% trans "Upload a new rock cannon" %}</h1>
-    <p class="muted">{% trans "Share new discoveries with the community." %}</p>
-</div>
-
-<div class="card">
-    <form method="post">
+<section class="upload-shell">
+    <h1 class="upload-shell__title">{% trans "Upload Cannon" %}</h1>
+    <form method="post" enctype="multipart/form-data" class="upload-form card">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button class="btn" type="submit">{% trans "Submit" %}</button>
+        {% if form.non_field_errors %}
+            <div class="form-errors">{{ form.non_field_errors }}</div>
+        {% endif %}
+
+        <div class="upload-form__grid">
+            <div class="upload-form__column">
+                <div class="upload-section">
+                    <h2>{% trans "Rock Cannon Name" %} <span>*</span></h2>
+                    {{ form.name }}
+                    {% if form.name.errors %}<div class="field-errors">{{ form.name.errors }}</div>{% endif %}
+                </div>
+
+                <div class="upload-section">
+                    <h2>{% trans "Information" %}</h2>
+                    {{ form.summary }}
+                    {% if form.summary.errors %}<div class="field-errors">{{ form.summary.errors }}</div>{% endif %}
+                </div>
+            </div>
+
+            <div class="upload-form__column">
+                <div class="upload-section">
+                    <h2>{% trans "Location" %} <span>*</span></h2>
+                    <label for="{{ form.address.id_for_label }}">{% trans "Address" %}</label>
+                    {{ form.address }}
+                    {% if form.address.errors %}<div class="field-errors">{{ form.address.errors }}</div>{% endif %}
+
+                    <label for="{{ form.what3words.id_for_label }}">{% trans "What3Words" %}</label>
+                    {{ form.what3words }}
+                    {% if form.what3words.errors %}<div class="field-errors">{{ form.what3words.errors }}</div>{% endif %}
+
+                    <div class="upload-form__coords">
+                        <div>
+                            <label for="{{ form.latitude.id_for_label }}">{% trans "Latitude" %}</label>
+                            {{ form.latitude }}
+                            {% if form.latitude.errors %}<div class="field-errors">{{ form.latitude.errors }}</div>{% endif %}
+                        </div>
+                        <div>
+                            <label for="{{ form.longitude.id_for_label }}">{% trans "Longitude" %}</label>
+                            {{ form.longitude }}
+                            {% if form.longitude.errors %}<div class="field-errors">{{ form.longitude.errors }}</div>{% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="upload-section">
+                    <h2>{% trans "Quick Info" %}</h2>
+                    <label for="{{ form.status.id_for_label }}">{% trans "Status" %}</label>
+                    {{ form.status }}
+                    {% if form.status.errors %}<div class="field-errors">{{ form.status.errors }}</div>{% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="upload-section upload-section--photos">
+            <h2>{% trans "Add Photos" %}</h2>
+            <p class="muted">{% trans "Optional: upload one or more photos now." %}</p>
+            <div class="upload-photo-picker">
+                <input type="file" name="photos" id="id_photos" class="upload-photo-input" accept="image/*" multiple>
+                <div id="photo-preview-grid" class="upload-photo-preview" aria-live="polite">
+                    <button type="button" id="photo-add-trigger" class="upload-photo-preview__add" aria-label="{% trans 'Add photos' %}">
+                        <span aria-hidden="true">+</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="upload-form__actions">
+            <button class="btn-upload" type="submit">{% trans "Upload" %}</button>
+        </div>
     </form>
-</div>
+    <p class="muted upload-shell__hint">{% trans "Share new discoveries with the community." %}</p>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    (function () {
+        const fileInput = document.getElementById('id_photos');
+        const previewGrid = document.getElementById('photo-preview-grid');
+        const addTrigger = document.getElementById('photo-add-trigger');
+        if (!fileInput || !previewGrid || !addTrigger) return;
+
+        const selectedFiles = [];
+        const activeUrls = new Map();
+
+        function fileKey(file) {
+            return [file.name, file.size, file.lastModified].join('::');
+        }
+
+        function syncInputFiles() {
+            const dataTransfer = new DataTransfer();
+            selectedFiles.forEach(function (file) {
+                dataTransfer.items.add(file);
+            });
+            fileInput.files = dataTransfer.files;
+        }
+
+        function removePhoto(index) {
+            selectedFiles.splice(index, 1);
+            renderPreviews();
+        }
+
+        function clearPreviews() {
+            previewGrid.querySelectorAll('.upload-photo-preview__item').forEach(function (item) {
+                item.remove();
+            });
+        }
+
+        function renderPreviews() {
+            clearPreviews();
+
+            selectedFiles.forEach(function (file, index) {
+                const key = fileKey(file);
+                const existingUrl = activeUrls.get(key);
+                const imageUrl = existingUrl || URL.createObjectURL(file);
+                if (!existingUrl) {
+                    activeUrls.set(key, imageUrl);
+                }
+
+                const card = document.createElement('figure');
+                card.className = 'upload-photo-preview__item';
+
+                const removeBtn = document.createElement('button');
+                removeBtn.type = 'button';
+                removeBtn.className = 'upload-photo-preview__remove';
+                removeBtn.setAttribute('aria-label', 'Remove ' + file.name);
+                removeBtn.textContent = '×';
+                removeBtn.addEventListener('click', function () {
+                    const url = activeUrls.get(key);
+                    if (url) {
+                        URL.revokeObjectURL(url);
+                        activeUrls.delete(key);
+                    }
+                    removePhoto(index);
+                });
+
+                const image = document.createElement('img');
+                image.src = imageUrl;
+                image.alt = file.name;
+
+                const caption = document.createElement('figcaption');
+                caption.textContent = file.name;
+
+                card.appendChild(removeBtn);
+                card.appendChild(image);
+                card.appendChild(caption);
+                previewGrid.insertBefore(card, addTrigger);
+            });
+
+            syncInputFiles();
+        }
+
+        addTrigger.addEventListener('click', function () {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', function () {
+            const files = Array.from(fileInput.files || []);
+            const knownKeys = new Set(selectedFiles.map(fileKey));
+
+            files.forEach(function (file) {
+                if (!file.type.startsWith('image/')) return;
+                const key = fileKey(file);
+                if (knownKeys.has(key)) return;
+                selectedFiles.push(file);
+                knownKeys.add(key);
+            });
+
+            renderPreviews();
+        });
+
+        window.addEventListener('beforeunload', function () {
+            activeUrls.forEach(function (url) {
+                URL.revokeObjectURL(url);
+            });
+            activeUrls.clear();
+        });
+    })();
+</script>
 {% endblock %}

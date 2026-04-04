@@ -2,76 +2,314 @@
 {% load i18n %}
 
 {% block title %}{{ cannon.name }}{% endblock %}
+{% block body_class %}cannon-detail-page{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+{% endblock %}
 
 {% block content %}
-<div class="card">
-    <h1>{{ cannon.name }}</h1>
-    <p class="muted">{% trans "Status" %}: {{ cannon.get_status_display }}</p>
-    <p>{{ cannon.summary }}</p>
-    <h3>{% trans "Local history" %}</h3>
-    <p>{{ cannon.history|default:_('No history added yet.') }}</p>
-    <h3>{% trans "Location" %}</h3>
-    <p>{{ cannon.address|default:_('No address yet.') }}</p>
-    <p class="muted">{{ cannon.latitude }}, {{ cannon.longitude }}</p>
-</div>
+<section class="detail-header-row">
+    <a class="detail-pill detail-pill--back" href="{% url 'map_view' %}"><i class="fa-solid fa-chevron-left"></i> {% trans "Back" %}</a>
+    <h1 class="detail-pill detail-pill--title">{{ cannon.name }}</h1>
+    <p class="detail-pill detail-pill--user">
+        {% if cannon.created_by %}
+            {% blocktrans with uploader=cannon.created_by.username %}Submitted by: {{ uploader }}{% endblocktrans %}
+        {% else %}
+            {% trans "Submitted by: Unknown user" %}
+        {% endif %}
+    </p>
+    <a class="detail-pill detail-pill--expand" href="{% url 'map_view' %}" aria-label="{% trans 'Open map' %}">
+        <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
+    </a>
+</section>
 
-<div class="grid">
-    <div class="card">
-        <h2>{% trans "Walking & hiking trails" %}</h2>
-        <ul>
+<section class="detail-top-grid">
+    <article class="card detail-carousel-card">
+        {% if cannon.photos.all %}
+            <div class="detail-carousel" data-carousel>
+                <button class="detail-carousel__control detail-carousel__control--prev" type="button" aria-label="{% trans 'Previous photo' %}">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+                <div class="detail-carousel__slides">
+                    {% for photo in cannon.photos.all %}
+                        <figure class="detail-carousel__slide{% if forloop.first %} is-active{% endif %}">
+                            <img src="{% url 'photo_image' photo.id %}" alt="{{ photo.caption|default:cannon.name }}" />
+                        </figure>
+                    {% endfor %}
+                </div>
+                <button class="detail-carousel__control detail-carousel__control--next" type="button" aria-label="{% trans 'Next photo' %}">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            </div>
+        {% else %}
+            <div class="detail-carousel__empty muted">{% trans "No photos yet." %}</div>
+        {% endif %}
+    </article>
+
+    <aside class="card detail-meta-card">
+        <h2>{% trans "Location" %}</h2>
+        <dl class="detail-meta-list">
+            <div>
+                <dt>{% trans "Map Coordinates" %}</dt>
+                <dd>
+                    {% if cannon.latitude and cannon.longitude %}
+                        {{ cannon.latitude }}, {{ cannon.longitude }}
+                    {% else %}
+                        {% trans "Not added" %}
+                    {% endif %}
+                </dd>
+            </div>
+            <div>
+                <dt>{% trans "Address" %}</dt>
+                <dd>{{ cannon.address|default:_('No address yet.') }}</dd>
+            </div>
+            <div>
+                <dt>{% trans "What3Words" %}</dt>
+                <dd>{{ cannon.what3words|default:_('Not provided') }}</dd>
+            </div>
+        </dl>
+
+        <h2>{% trans "Details" %}</h2>
+        <dl class="detail-meta-list">
+            <div>
+                <dt>{% trans "Status" %}</dt>
+                <dd>{{ cannon.get_status_display }}</dd>
+            </div>
+            <div>
+                <dt>{% trans "Photos" %}</dt>
+                <dd>{{ cannon.photos.count }}</dd>
+            </div>
+            <div>
+                <dt>{% trans "Trails" %}</dt>
+                <dd>{{ cannon.trails.count }}</dd>
+            </div>
+        </dl>
+    </aside>
+</section>
+
+<section class="detail-middle-grid">
+    <article class="card detail-history-card">
+        <h2>{% trans "History & Info" %}</h2>
+        <p>{{ cannon.summary|default:_('No information yet.') }}</p>
+        <p>{{ cannon.history|default:_('No history added yet.') }}</p>
+
+        <h3>{% trans "Walking & hiking trails" %}</h3>
+        <ul class="detail-trails-list">
             {% for trail in cannon.trails.all %}
                 <li>
-                    {{ trail.name }}
+                    <span>{{ trail.name }}</span>
                     {% if trail.map_url %}
-                        - <a href="{{ trail.map_url }}">{% trans "Map link" %}</a>
+                        <a href="{{ trail.map_url }}" target="_blank" rel="noopener noreferrer">{% trans "Map link" %}</a>
                     {% endif %}
                 </li>
             {% empty %}
                 <li class="muted">{% trans "No trail data yet." %}</li>
             {% endfor %}
         </ul>
-    </div>
-</div>
+    </article>
 
-<div class="card">
-    <h2>{% trans "Photos" %}</h2>
-    <div class="grid">
-        {% for photo in cannon.photos.all %}
-            <div>
-                <img class="responsive" src="{% url 'photo_image' photo.id %}" alt="{{ photo.caption }}" />
-                <p class="muted">{{ photo.caption }}</p>
-            </div>
+    <aside class="card detail-mini-map-card">
+        {% if cannon.latitude and cannon.longitude %}
+            <div id="cannon-mini-map" class="detail-mini-map" aria-label="{% trans 'Cannon location map' %}"></div>
+        {% else %}
+            <p class="muted">{% trans "No map coordinates yet." %}</p>
+        {% endif %}
+    </aside>
+</section>
+
+<section class="card detail-gallery-card">
+    <div class="detail-section-header">
+        <h2>{% trans "Gallery" %}</h2>
+        <div class="detail-section-actions">
+            <button
+                class="detail-action-icon"
+                type="button"
+                data-upload-trigger="detail-gallery-image-input"
+                aria-label="{% trans 'Upload photo' %}"
+            >
+                <i class="fa-solid fa-plus"></i>
+            </button>
+        </div>
+    </div>
+
+    <form id="detail-gallery-upload-form" method="post" enctype="multipart/form-data" action="{% url 'upload_photo' %}" class="detail-gallery-upload-form" aria-hidden="true">
+            {% csrf_token %}
+            {{ photo_form.rock_cannon.as_hidden }}
+            <input id="detail-gallery-image-input" type="file" name="image" accept="image/*" required />
+    </form>
+
+    <div class="detail-gallery-grid">
+        {% for photo in cannon.photos.all|slice:":6" %}
+            <article class="detail-gallery-item">
+                <img src="{% url 'photo_image' photo.id %}" alt="{{ photo.caption|default:cannon.name }}" />
+                <div class="detail-gallery-item__overlay">
+                    <div>
+                        <strong>[{{ cannon.name }}]</strong>
+                        <p>
+                            {% if photo.uploaded_by %}
+                                {% blocktrans with uploader=photo.uploaded_by.username %}Uploaded By: [{{ uploader }}]{% endblocktrans %}
+                            {% else %}
+                                {% trans "Uploaded By: [Unknown user]" %}
+                            {% endif %}
+                        </p>
+                    </div>
+                    <a href="{% url 'cannon_detail' cannon.slug %}" aria-label="{% trans 'Open cannon details' %}">
+                        <i class="fa-solid fa-expand"></i>
+                    </a>
+                </div>
+            </article>
         {% empty %}
             <p class="muted">{% trans "No photos yet." %}</p>
         {% endfor %}
     </div>
-</div>
+</section>
 
-<div class="card">
-    <h2>{% trans "Upload a photo" %}</h2>
-    <form method="post" enctype="multipart/form-data" action="{% url 'upload_photo' %}">
-        {% csrf_token %}
-        {{ photo_form.as_p }}
-        <button class="btn" type="submit">{% trans "Upload photo" %}</button>
-    </form>
-</div>
+<section class="card detail-comments-panel">
+    <div class="detail-section-header">
+        <h2>{% trans "Comments" %}</h2>
+        <div class="detail-section-actions">
+            <button
+                class="detail-action-icon"
+                type="button"
+                data-toggle-target="detail-comment-form"
+                aria-expanded="false"
+                aria-controls="detail-comment-form"
+                aria-label="{% trans 'Add comment' %}"
+            >
+                <i class="fa-solid fa-plus"></i>
+            </button>
+        </div>
+    </div>
 
-<div class="card">
-    <h2>{% trans "Comments" %}</h2>
-    <form method="post" action="{% url 'add_comment' cannon.slug %}">
-        {% csrf_token %}
-        {{ comment_form.as_p }}
-        <button class="btn" type="submit">{% trans "Add comment" %}</button>
-    </form>
-    <ul>
+    <div id="detail-comment-form" class="detail-inline-form is-hidden">
+        <form method="post" action="{% url 'add_comment' cannon.slug %}">
+            {% csrf_token %}
+            {{ comment_form.non_field_errors }}
+            <label for="{{ comment_form.body.id_for_label }}">{{ comment_form.body.label }}</label>
+            {{ comment_form.body }}
+            {% if comment_form.body.errors %}<div class="field-errors">{{ comment_form.body.errors }}</div>{% endif %}
+            <button class="btn" type="submit">{% trans "Add comment" %}</button>
+        </form>
+    </div>
+
+    <ul class="detail-comments-list detail-comments-list--stacked">
         {% for comment in cannon.comments.all %}
-            <li>
-                <strong>{{ comment.user|default:_('Anonymous') }}</strong> - {{ comment.created_at|date:"Y-m-d" }}<br />
-                {{ comment.body }}
+            <li class="detail-comment-item">
+                <div class="detail-comment-item__heading">
+                    <i class="fa-solid fa-circle-user" aria-hidden="true"></i>
+                    <strong>[{{ comment.user|default:_('Anonymous') }}]</strong>
+                </div>
+                <p>{{ comment.body }}</p>
             </li>
         {% empty %}
             <li class="muted">{% trans "No comments yet." %}</li>
         {% endfor %}
     </ul>
-</div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    (function () {
+        var carousel = document.querySelector('[data-carousel]');
+        if (carousel) {
+            var slides = carousel.querySelectorAll('.detail-carousel__slide');
+            var prevBtn = carousel.querySelector('.detail-carousel__control--prev');
+            var nextBtn = carousel.querySelector('.detail-carousel__control--next');
+            var index = 0;
+
+            function showSlide(nextIndex) {
+                slides[index].classList.remove('is-active');
+                index = (nextIndex + slides.length) % slides.length;
+                slides[index].classList.add('is-active');
+            }
+
+            if (slides.length > 1) {
+                prevBtn.addEventListener('click', function () {
+                    showSlide(index - 1);
+                });
+
+                nextBtn.addEventListener('click', function () {
+                    showSlide(index + 1);
+                });
+            } else {
+                prevBtn.hidden = true;
+                nextBtn.hidden = true;
+            }
+        }
+
+        var toggleButtons = document.querySelectorAll('[data-toggle-target]');
+        toggleButtons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                var targetId = button.getAttribute('data-toggle-target');
+                if (!targetId) {
+                    return;
+                }
+
+                var target = document.getElementById(targetId);
+                if (!target) {
+                    return;
+                }
+
+                var isHidden = target.classList.toggle('is-hidden');
+                button.setAttribute('aria-expanded', String(!isHidden));
+            });
+        });
+
+        var uploadTriggerButtons = document.querySelectorAll('[data-upload-trigger]');
+        uploadTriggerButtons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                var inputId = button.getAttribute('data-upload-trigger');
+                if (!inputId) {
+                    return;
+                }
+
+                var fileInput = document.getElementById(inputId);
+                if (!fileInput) {
+                    return;
+                }
+
+                fileInput.click();
+            });
+        });
+
+        var galleryFileInput = document.getElementById('detail-gallery-image-input');
+        if (galleryFileInput) {
+            galleryFileInput.addEventListener('change', function () {
+                if (!galleryFileInput.files || galleryFileInput.files.length === 0) {
+                    return;
+                }
+
+                var uploadForm = document.getElementById('detail-gallery-upload-form');
+                if (uploadForm) {
+                    uploadForm.submit();
+                }
+            });
+        }
+
+        {% if cannon.latitude and cannon.longitude %}
+        var mapElement = document.getElementById('cannon-mini-map');
+        if (mapElement) {
+            var miniMap = L.map('cannon-mini-map', { zoomControl: false }).setView([{{ cannon.latitude }}, {{ cannon.longitude }}], 12);
+            var maptilerApiKey = "{{ maptiler_api_key|default:''|escapejs }}";
+
+            if (maptilerApiKey) {
+                L.tileLayer('https://api.maptiler.com/maps/base-v4/256/{z}/{x}/{y}.png?key=' + maptilerApiKey, {
+                    maxZoom: 20,
+                    attribution: '&copy; <a href="https://www.maptiler.com/copyright/" target="_blank" rel="noopener noreferrer">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors'
+                }).addTo(miniMap);
+            } else {
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors'
+                }).addTo(miniMap);
+            }
+
+            L.marker([{{ cannon.latitude }}, {{ cannon.longitude }}]).addTo(miniMap);
+        }
+        {% endif %}
+    })();
+</script>
 {% endblock %}

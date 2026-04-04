@@ -2,38 +2,29 @@
 {% load static i18n %}
 
 {% block title %}Rock Cannon Tracker{% endblock %}
+{% block body_class %}home-page{% endblock %}
 
 {% block content %}
-<section class="hero-banner" style="background-image: url('{% static 'Rockcannon imgs/rock-cannon-20110212-gefnan-mynydd-llandegai-02.jpg' %}');">
+<section class="hero-banner">
+    <div class="hero-panel">
+        <div class="hero-glass">
+            <h1>{% trans "Beth yw Canonau Creigiau?" %}</h1>
+            <p>
+                Darganfyddwch ffurfiannau daearegol a hanesyddol prin ar draws y rhanbarth.
+                Dysgwch eu straeon, cynlluniwch ymweliadau, a helpwch i'w diogelu ar gyfer fforwyr y dyfodol.
+            </p>
+            <a class="btn hero-cta" href="{% url 'map_view' %}">{% trans "Ewch i'r Map" %}</a>
+        </div>
+    </div>
+
     <div class="hero-panel">
         <div class="hero-glass">
             <h1>{% trans "What Are Rock Cannons?" %}</h1>
             <p>
                 {% trans "Discover rare geological and historical formations across the region. Learn their stories, plan visits, and help protect them for future explorers." %}
             </p>
-            <a class="btn ghost" href="{% url 'cannon_list' %}">{% trans "Learn More" %}</a>
+            <a class="btn hero-cta" href="{% url 'map_view' %}">{% trans "Continue To Map" %}</a>
         </div>
     </div>
-</section>
-
-<section class="home-cards">
-    <a class="image-card" href="{% url 'map_view' %}" style="background-image: url('{% static 'Rockcannon imgs/Rock-cannon-at-Betws.jpg' %}');">
-        <div class="image-card__glass">
-            <h3>{% trans "Interactive Map" %}</h3>
-            <p>{% trans "Find a specific rock cannon or explore nearby locations." %}</p>
-        </div>
-    </a>
-    <a class="image-card" href="{% url 'gallery' %}" style="background-image: url('{% static 'Rockcannon imgs/images.jpeg' %}');">
-        <div class="image-card__glass">
-            <h3>{% trans "View Gallery" %}</h3>
-            <p>{% trans "See what the community has posted about each rock cannon." %}</p>
-        </div>
-    </a>
-    <a class="image-card" href="{% url 'upload_cannon' %}" style="background-image: url('{% static 'Rockcannon imgs/images (1).jpeg' %}');">
-        <div class="image-card__glass">
-            <h3>{% trans "Add a Cannon" %}</h3>
-            <p>{% trans "Found a new cannon? Add it and share the discovery." %}</p>
-        </div>
-    </a>
 </section>
 {% endblock %}

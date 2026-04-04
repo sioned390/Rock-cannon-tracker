@@ -7,24 +7,44 @@
     <title>{% block title %}Rock Cannon Tracker{% endblock %}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <script src="https://kit.fontawesome.com/a917b46b8d.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{% static 'hello/styles.css' %}" />
     {% block extra_head %}{% endblock %}
 </head>
 <body class="{% block body_class %}{% endblock %}">
     <header>
         <nav>
-            <div>
+            <div class="nav-brand">
                 <a href="{% url 'home' %}">Rock Cannon Tracker</a>
-                <a href="{% url 'cannon_list' %}">{% trans "List" %}</a>
-                <a href="{% url 'map_view' %}">{% trans "Map" %}</a>
-                <a href="{% url 'gallery' %}">{% trans "Gallery" %}</a>
-                <a href="{% url 'upload_cannon' %}">{% trans "Upload" %}</a>
             </div>
-            <div>
+            <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav-links" aria-label="Toggle navigation">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <div class="nav-links" id="site-nav-links">
+                <a href="{% url 'about' %}">{% trans "About" %}</a>
+                <details class="nav-dropdown nav-dropdown--right">
+                    <summary>{% trans "Browse" %}</summary>
+                    <div class="nav-dropdown__menu nav-dropdown__menu--right">
+                        <a href="{% url 'map_view' %}"><i class="fa-solid fa-map-location"></i> {% trans "Map" %}</a>
+                        <a href="{% url 'gallery' %}"><i class="fa-solid fa-images"></i> {% trans "Gallery" %}</a>
+                    </div>
+                </details>
                 {% if user.is_authenticated %}
-                    <a href="{% url 'profile' %}">{% trans "My Profile" %}</a>
-                    <a href="{% url 'logout' %}">{% trans "Sign out" %}</a>
+                    <details class="nav-dropdown nav-dropdown--right">
+                        <summary>{{ user.username }}</summary>
+                        <div class="nav-dropdown__menu nav-dropdown__menu--right">
+                            <a href="{% url 'profile' %}"><i class="fa-solid fa-user-gear"></i> {% trans "My Account" %}</a>
+                            <a href="{% url 'upload_cannon' %}"><i class="fa-solid fa-file-arrow-up"></i> {% trans "Upload" %}</a>
+                            <form action="{% url 'logout' %}" method="post" class="nav-dropdown__form">
+                                {% csrf_token %}
+                                <input name="next" type="hidden" value="{% url 'home' %}" />
+                                <button type="submit" class="nav-dropdown__button">
+                                    <i class="fa-solid fa-sign-out-alt"></i> {% trans "Log out" %}
+                                </button>
+                            </form>
+                        </div>
+                    </details>
                 {% else %}
                     <a href="{% url 'login' %}">{% trans "Sign in" %}</a>
                     <a href="{% url 'signup' %}">{% trans "Register" %}</a>
@@ -47,6 +67,18 @@
     <main class="container">
         {% block content %}{% endblock %}
     </main>
+    <script>
+        (function () {
+            var toggle = document.querySelector('.nav-toggle');
+            var nav = document.querySelector('header nav');
+            if (!toggle || !nav) return;
+
+            toggle.addEventListener('click', function () {
+                var isOpen = nav.classList.toggle('is-open');
+                toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+            });
+        })();
+    </script>
     {% block extra_scripts %}{% endblock %}
 </body>
 </html>

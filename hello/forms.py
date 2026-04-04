@@ -13,8 +13,33 @@ class RockCannonForm(forms.ModelForm):
             "latitude",
             "longitude",
             "address",
+            "what3words",
             "status",
         ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["name"].widget.attrs.update(
+            {"placeholder": "Rock Cannon Name"}
+        )
+        self.fields["summary"].widget.attrs.update(
+            {"placeholder": "Description about the rock cannon...", "rows": 6}
+        )
+        self.fields["history"].widget.attrs.update(
+            {"placeholder": "History, lore, or route details...", "rows": 4}
+        )
+        self.fields["address"].widget.attrs.update(
+            {"placeholder": "e.g. Pen-y-Pass car park"}
+        )
+        self.fields["what3words"].widget.attrs.update(
+            {"placeholder": "e.g. filled.count.soap"}
+        )
+        self.fields["latitude"].widget.attrs.update(
+            {"placeholder": "00.000000"}
+        )
+        self.fields["longitude"].widget.attrs.update(
+            {"placeholder": "00.000000"}
+        )
 
 
 class RockCannonPhotoForm(forms.ModelForm):

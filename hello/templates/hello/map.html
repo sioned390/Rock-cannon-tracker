@@ -7,25 +7,40 @@
 {% block content %}
 <div class="map-layout">
     <div id="map" class="map-canvas"></div>
-    <aside class="map-sidebar">
-        <div class="map-sidebar__header">
-            <h1>{% trans "Map View" %}</h1>
-            <p class="muted">{% trans "Explore rock cannons and open details." %}</p>
+    <aside id="map-sidebar" class="map-sidebar">
+        <div id="map-empty-state" class="map-empty-state">
+            <h2>{% trans "Select a rock cannon" %}</h2>
+            <p class="muted">{% trans "Click a pin on the map to view details." %}</p>
         </div>
-        <div class="map-sidebar__list">
-            {% for cannon in cannons %}
-                <div class="map-card">
-                    <h3>{{ cannon.name }}</h3>
-                    <p class="muted">{{ cannon.address|default:_('No address yet') }}</p>
-                    <p class="muted">{{ cannon.latitude }}, {{ cannon.longitude }}</p>
-                    <a class="btn" href="{% url 'cannon_detail' cannon.slug %}">{% trans "View details" %}</a>
+        <article id="map-detail" class="map-detail" aria-live="polite">
+            <h2 id="map-detail-name"></h2>
+
+            <div class="map-detail__chips">
+                <span id="map-detail-status" class="map-detail__chip"></span>
+                <span id="map-detail-photos" class="map-detail__chip"></span>
+            </div>
+
+            <div class="map-detail__image-shell">
+                <img id="map-detail-image" src="" alt="" hidden />
+                <div id="map-detail-image-placeholder" class="map-detail__image-placeholder muted">
+                    {% trans "No image yet" %}
                 </div>
-            {% empty %}
-                <div class="map-card">
-                    <p class="muted">{% trans "No rock cannons added yet." %}</p>
-                </div>
-            {% endfor %}
-        </div>
+            </div>
+
+            <section class="map-detail__section">
+                <h3>{% trans "Location" %}</h3>
+                <p><strong>{% trans "Map Coordinates" %}</strong> <span id="map-detail-coords"></span></p>
+                <p><strong>{% trans "Address" %}</strong> <span id="map-detail-address"></span></p>
+                <p><strong>{% trans "What3Words" %}</strong> <span id="map-detail-w3w"></span></p>
+            </section>
+
+            <section class="map-detail__section">
+                <h3>{% trans "Information" %}</h3>
+                <p id="map-detail-summary" class="map-detail__summary"></p>
+            </section>
+
+            <a id="map-detail-link" class="btn map-detail__cta" href="#">{% trans "Learn More" %}</a>
+        </article>
     </aside>
 </div>
 
@@ -34,27 +49,118 @@
 <script>
     var map = L.map('map').setView([52.9, -4.2], 10);
 
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
+    var maptilerApiKey = "{{ maptiler_api_key|default:''|escapejs }}";
+
+    if (maptilerApiKey) {
+        L.tileLayer('https://api.maptiler.com/maps/base-v4/256/{z}/{x}/{y}.png?key=' + maptilerApiKey, {
+            maxZoom: 20,
+            className: 'map-theme-tile',
+            attribution: '&copy; <a href="https://www.maptiler.com/copyright/" target="_blank" rel="noopener noreferrer">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors'
+        }).addTo(map);
+    } else {
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+            maxZoom: 20,
+            subdomains: 'abcd',
+            className: 'map-theme-tile',
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+        }).addTo(map);
+    }
 
     var cannons = [
         {% for cannon in cannons %}
             {% if cannon.latitude and cannon.longitude %}
+                {% with photos=cannon.photos.all %}
                 {
                     name: "{{ cannon.name|escapejs }}",
+                    status: "{{ cannon.get_status_display|escapejs }}",
                     lat: {{ cannon.latitude }},
                     lng: {{ cannon.longitude }},
+                    address: "{{ cannon.address|default:_('No address yet')|escapejs }}",
+                    what3words: "{{ cannon.what3words|default:_('Not provided')|escapejs }}",
+                    summary: "{{ cannon.summary|default:_('No information yet.')|escapejs }}",
+                    photoCount: {{ photos|length }},
+                    firstPhoto: "{% if photos %}{% url 'photo_image' photos.0.id %}{% endif %}",
                     url: "{% url 'cannon_detail' cannon.slug %}"
                 },
+                {% endwith %}
             {% endif %}
         {% endfor %}
     ];
 
+    var detailPanel = document.getElementById('map-detail');
+    var mapSidebar = document.getElementById('map-sidebar');
+    var emptyState = document.getElementById('map-empty-state');
+    var detailName = document.getElementById('map-detail-name');
+    var detailStatus = document.getElementById('map-detail-status');
+    var detailPhotos = document.getElementById('map-detail-photos');
+    var detailCoords = document.getElementById('map-detail-coords');
+    var detailAddress = document.getElementById('map-detail-address');
+    var detailW3W = document.getElementById('map-detail-w3w');
+    var detailSummary = document.getElementById('map-detail-summary');
+    var detailImage = document.getElementById('map-detail-image');
+    var detailImagePlaceholder = document.getElementById('map-detail-image-placeholder');
+    var detailLink = document.getElementById('map-detail-link');
+    var defaultMarkerIcon = L.divIcon({
+        className: 'cannon-marker',
+        html: '<span class="cannon-marker__pin"></span>',
+        iconSize: [30, 42],
+        iconAnchor: [15, 42],
+        popupAnchor: [0, -34]
+    });
+    var selectedMarkerIcon = L.divIcon({
+        className: 'cannon-marker cannon-marker--selected',
+        html: '<span class="cannon-marker__pin"></span>',
+        iconSize: [36, 50],
+        iconAnchor: [18, 50],
+        popupAnchor: [0, -42]
+    });
+    var activeMarker = null;
+
+    function selectCannon(cannon, marker) {
+        detailName.textContent = cannon.name;
+        detailStatus.textContent = cannon.status;
+        detailPhotos.textContent = cannon.photoCount + ' {% trans "Photos" %}';
+        detailCoords.textContent = cannon.lat + ', ' + cannon.lng;
+        detailAddress.textContent = cannon.address;
+        detailW3W.textContent = cannon.what3words;
+        detailSummary.textContent = cannon.summary;
+        detailLink.href = cannon.url;
+
+        if (cannon.firstPhoto) {
+            detailImage.src = cannon.firstPhoto;
+            detailImage.alt = cannon.name;
+            detailImage.hidden = false;
+            detailImagePlaceholder.hidden = true;
+        } else {
+            detailImage.hidden = true;
+            detailImagePlaceholder.hidden = false;
+        }
+
+        emptyState.hidden = true;
+        mapSidebar.classList.add('is-active');
+
+        if (activeMarker) {
+            activeMarker.setIcon(defaultMarkerIcon);
+        }
+
+        if (marker) {
+            marker.setIcon(selectedMarkerIcon);
+            activeMarker = marker;
+        }
+
+        detailPanel.classList.remove('is-visible');
+        window.requestAnimationFrame(function() {
+            detailPanel.classList.add('is-visible');
+        });
+    }
+
     cannons.forEach(function(cannon) {
-        L.marker([cannon.lat, cannon.lng])
-            .addTo(map)
-            .bindPopup('<strong>' + cannon.name + '</strong><br><a href="' + cannon.url + '">View details</a>');
+        var marker = L.marker([cannon.lat, cannon.lng], { icon: defaultMarkerIcon })
+            .addTo(map);
+
+        marker.on('click', function() {
+            selectCannon(cannon, marker);
+        });
     });
 </script>
 {% endblock %}

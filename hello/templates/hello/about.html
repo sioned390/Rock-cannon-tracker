@@ -1,0 +1,38 @@
+{% extends 'hello/base.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans "About" %}{% endblock %}
+
+{% block body_class %}about-page{% endblock %}
+
+{% block content %}
+<section class="about-layout">
+    <article class="about-card about-card--text">
+        <h1>{% trans "What Are Rock Cannons?" %}</h1>
+        <p>
+            {% trans "Rock cannons were used in the 18th and 19th centuries to create loud sounds that scared birds away from crops. They were often made from old cannons or large metal pipes and fired with gunpowder. The blast helped farmers protect their harvests." %}
+        </p>
+        <p>
+            {% trans "Today, rock cannons remain an important part of local heritage. In many places they are now fired during festivals and community events, where they represent history, identity, and tradition." %}
+        </p>
+    </article>
+
+    <article class="about-card about-card--image">
+        <img src="{% static 'Rockcannon imgs/Hero_Photo_2.jpg' %}" alt="{% trans 'Rock Cannon in landscape' %}" />
+    </article>
+
+    <article class="about-card about-card--image">
+        <img src="{% static 'Rockcannon imgs/rock_cannon1.jpg' %}" alt="{% trans 'Historic rock cannon site' %}" />
+    </article>
+
+    <article class="about-card about-card--text">
+        <h1>{% trans "Preserving Their History" %}</h1>
+        <p>
+            {% trans "Preserving the history of rock cannons helps us understand the creativity and resilience of farming communities. Their story connects people to the landscape, local memory, and traditions passed down through generations." %}
+        </p>
+        <p>
+            {% trans "Keeping these sites visible and documented also supports education and tourism, helping more people discover this unique part of Welsh heritage." %}
+        </p>
+    </article>
+</section>
+{% endblock %}

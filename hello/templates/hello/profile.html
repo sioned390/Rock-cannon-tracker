@@ -2,39 +2,110 @@
 {% load i18n %}
 
 {% block title %}{% trans "My Profile" %}{% endblock %}
+{% block body_class %}profile-page{% endblock %}
 
 {% block content %}
-<div class="card">
-    <h1>{% trans "Contributor Profile" %}</h1>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button class="btn" type="submit">{% trans "Save profile" %}</button>
-    </form>
-</div>
+<section class="profile-shell">
+    <h1 class="profile-shell__title">{% trans "My Account" %}</h1>
 
-<div class="card">
-    <h2>{% trans "My uploaded photos" %}</h2>
-    <div class="grid">
-        {% for photo in photos %}
-            <div>
-                <img class="responsive" src="{% url 'photo_image' photo.id %}" alt="{{ photo.caption }}" />
-                <p class="muted">{{ photo.caption }}</p>
+    <div class="profile-layout">
+        <aside class="profile-sidebar card">
+            <div class="profile-user-row">
+                {% if form.instance.profile_picture_data %}
+                    <img class="profile-avatar" src="{% url 'profile_image' form.instance.id %}" alt="{{ user.username }}" />
+                {% else %}
+                    <div class="profile-avatar profile-avatar--placeholder">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                {% endif %}
+                <h2>[{{ user.username }}]</h2>
             </div>
-        {% empty %}
-            <p class="muted">{% trans "No photos yet." %}</p>
-        {% endfor %}
-    </div>
-</div>
 
-<div class="card">
-    <h2>{% trans "My comments" %}</h2>
-    <ul>
-        {% for comment in comments %}
-            <li>{{ comment.rock_cannon.name }} - {{ comment.body }}</li>
-        {% empty %}
-            <li class="muted">{% trans "No comments yet." %}</li>
-        {% endfor %}
-    </ul>
-</div>
+            <form method="post" enctype="multipart/form-data" class="profile-sidebar__form">
+                {% csrf_token %}
+                <input id="profile-picture-input" class="profile-picture-input" type="file" name="profile_picture" accept="image/*" />
+                <button id="profile-change-btn" class="profile-upload-btn" type="button">{% trans "Change Profile Picture" %}</button>
+                <button id="profile-change-submit" class="profile-save-hidden" type="submit" name="change_profile_picture" value="1">{% trans "Change" %}</button>
+
+                <button class="profile-clear-btn" type="submit" name="clear_profile_picture" value="1">{% trans "Clear to Default" %}</button>
+
+                <a class="profile-upload-btn" href="{% url 'upload_cannon' %}">{% trans "Upload New Cannon" %}</a>
+            </form>
+
+            <form action="{% url 'logout' %}" method="post" class="profile-logout-form">
+                {% csrf_token %}
+                <button class="profile-logout-btn" type="submit">{% trans "Log Out" %}</button>
+            </form>
+        </aside>
+
+        <section class="profile-main">
+            <article class="card profile-info-card">
+                <h2>{% trans "Account Info" %}</h2>
+
+                <dl class="profile-info-list">
+                    <div>
+                        <dt>{% trans "Username:" %}</dt>
+                        <dd>[{{ user.username }}]</dd>
+                    </div>
+                    <div>
+                        <dt>{% trans "Account Age:" %}</dt>
+                        <dd>{{ user.date_joined|timesince }}</dd>
+                    </div>
+                    <div>
+                        <dt>{% trans "Account Type:" %}</dt>
+                        <dd>
+                            {% if form.instance.is_moderator %}
+                                {% trans "Moderator" %}
+                            {% else %}
+                                {% trans "Member" %}
+                            {% endif %}
+                        </dd>
+                    </div>
+                    <div>
+                        <dt>{% trans "Verified" %}</dt>
+                        <dd class="profile-verified"><i class="fa-solid fa-check"></i></dd>
+                    </div>
+                    <div>
+                        <dt>{% trans "Recovery Email:" %}</dt>
+                        <dd>{{ user.email|default:_('Not set') }}</dd>
+                    </div>
+                    <div>
+                        <dt>{% trans "Password:" %}</dt>
+                        <dd>********</dd>
+                    </div>
+                </dl>
+            </article>
+        </section>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    (function () {
+        var profileInput = document.getElementById('profile-picture-input');
+        var changeButton = document.getElementById('profile-change-btn');
+        var submitButton = document.getElementById('profile-change-submit');
+
+        if (!profileInput) {
+            return;
+        }
+
+        if (changeButton) {
+            changeButton.addEventListener('click', function () {
+                profileInput.click();
+            });
+        }
+
+        profileInput.addEventListener('change', function () {
+            if (!profileInput.files || profileInput.files.length === 0) {
+                return;
+            }
+
+            if (submitButton) {
+                submitButton.click();
+            }
+        });
+    })();
+</script>
 {% endblock %}

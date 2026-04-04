@@ -19,6 +19,228 @@
 
 ---
 
+## Part 0: HOW TRANSLATION WORKS (Internationalization / i18n)
+
+This app supports **two languages**:
+
+- **English** (`en`) - the default language
+- **Welsh** (`cy`) - the translated language
+
+Django calls this system **internationalization** (**i18n**). It lets the site show the same page in different languages without building two separate websites.
+
+### Where the translation settings live
+
+The main configuration is in [web_project/settings.py](web_project/settings.py).
+
+```python
+from django.utils.translation import gettext_lazy as _
+
+LANGUAGE_CODE = 'en'
+
+LANGUAGES = [
+    ('en', _('English')),
+    ('cy', _('Welsh')),
+]
+
+LOCALE_PATHS = [
+    BASE_DIR / 'locale',
+]
+
+USE_I18N = True
+```
+
+### What each setting means
+
+- `LANGUAGE_CODE = 'en'` = the site starts in English by default
+- `LANGUAGES` = the list of languages users are allowed to switch between
+- `gettext_lazy as _` = lets Django translate labels such as **English** and **Welsh** lazily
+- `LOCALE_PATHS` = tells Django where translation files are stored
+- `USE_I18N = True` = turns Django's translation system on
+
+### Why `LocaleMiddleware` matters
+
+Also in [web_project/settings.py](web_project/settings.py), the middleware list contains:
+
+```python
+'django.middleware.locale.LocaleMiddleware',
+```
+
+This middleware is what makes Django:
+
+- read the user's current language choice
+- load the correct translated text
+- show templates in English or Welsh automatically
+
+Without `LocaleMiddleware`, the translation files can exist, but Django will not switch language properly for each request.
+
+### How the language switch button works
+
+The language switcher is in [hello/templates/hello/base.html](hello/templates/hello/base.html).
+
+```django
+{% load static i18n %}
+
+<form action="{% url 'set_language' %}" method="post" style="display:inline;">
+    {% csrf_token %}
+    <input name="next" type="hidden" value="{{ request.path }}" />
+    {% get_current_language as CURRENT_LANG %}
+    {% if CURRENT_LANG == 'cy' %}
+        <input name="language" type="hidden" value="en" />
+        <button class="btn" type="submit">English</button>
+    {% else %}
+        <input name="language" type="hidden" value="cy" />
+        <button class="btn" type="submit">Cymraeg</button>
+    {% endif %}
+</form>
+```
+
+### What this form does
+
+1. The form posts to Django's built-in language-switching URL
+2. The hidden `language` field sends either `en` or `cy`
+3. The hidden `next` field tells Django which page to return to after switching
+4. `CURRENT_LANG` checks which language is active right now
+5. The button text changes so the user can switch to the *other* language
+
+The URL for this form works because [web_project/urls.py](web_project/urls.py) includes:
+
+```python
+path('i18n/', include('django.conf.urls.i18n')),
+```
+
+That gives Django the built-in `set_language` view used by the form.
+
+### How templates get translated
+
+Templates that use translation must load Django's i18n tags first:
+
+```django
+{% load i18n %}
+```
+
+Then text can be wrapped with the `trans` tag:
+
+```django
+{% trans "List" %}
+{% trans "Map" %}
+{% trans "Gallery" %}
+```
+
+### What `trans` means
+
+Think of it like this:
+
+- Django sees the English source text, such as `"Gallery"`
+- It looks for the same text in the translation file
+- If a Welsh translation exists, Django shows the Welsh version
+- If no translation exists, Django falls back to the original English text
+
+So the English text inside `{% trans "..." %}` acts like the **lookup key**.
+
+### Where the Welsh translations are stored
+
+The Welsh translations live in [locale/cy/LC_MESSAGES/django.po](locale/cy/LC_MESSAGES/django.po).
+
+Example:
+
+```po
+msgid "Gallery"
+msgstr "Oriel"
+
+msgid "Upload"
+msgstr "Lanlwytho"
+```
+
+### What `msgid` and `msgstr` mean
+
+- `msgid` = the original source text, usually written in English in templates or Python
+- `msgstr` = the translated version shown to the user
+
+So this means:
+
+- If the page is in English, show `Gallery`
+- If the page is in Welsh, show `Oriel`
+
+### The full translation flow
+
+Here is the complete path from code to translated page:
+
+1. A template contains text such as `{% trans "Map" %}`
+2. Django sees that the active language is `cy`
+3. `LocaleMiddleware` loads the Welsh translations
+4. Django checks [locale/cy/LC_MESSAGES/django.po](locale/cy/LC_MESSAGES/django.po) for `msgid "Map"`
+5. It finds `msgstr "Map"`
+6. The page is rendered using the translated value
+
+### How to add a new translation
+
+If you add new visible text to a template or Python file, the normal workflow is:
+
+1. Wrap the text in a translation function or tag
+2. Regenerate translation messages
+3. Add the Welsh translation
+4. Compile the messages
+
+#### In templates
+
+```django
+{% trans "View Gallery" %}
+```
+
+#### In Python
+
+```python
+from django.utils.translation import gettext as _
+
+message = _("Profile updated successfully")
+```
+
+### Useful commands
+
+Run these from the project root:
+
+```bash
+./djangoProject/bin/python manage.py makemessages -l cy
+./djangoProject/bin/python manage.py compilemessages
+```
+
+### What these commands do
+
+- `makemessages -l cy` = scans the project for new translatable text and updates the Welsh `.po` file
+- `compilemessages` = turns the human-readable `.po` file into a machine-usable `.mo` file
+
+This project already contains both:
+
+- [locale/cy/LC_MESSAGES/django.po](locale/cy/LC_MESSAGES/django.po) = editable translation source
+- [locale/cy/LC_MESSAGES/django.mo](locale/cy/LC_MESSAGES/django.mo) = compiled file Django reads at runtime
+
+### Important rule to remember
+
+Only text wrapped for translation can be translated.
+
+That means:
+
+- plain text written directly in a template will stay in English
+- text inside `{% trans "..." %}` can be translated
+- text wrapped with `_()` in Python can be translated
+
+### Example in plain English
+
+If the template says:
+
+```django
+<a href="{% url 'gallery' %}">{% trans "Gallery" %}</a>
+```
+
+Then Django does this:
+
+- English mode -> `Gallery`
+- Welsh mode -> `Oriel`
+
+That is the whole translation system: **mark text**, **store translations**, **switch language**, and **Django renders the correct version automatically**.
+
+---
+
 ## Part 1: THE CORE DATA (Models)
 
 ### What is a "Model"?

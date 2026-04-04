@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
+from django.conf import settings
 from django.db.models import Prefetch
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -11,6 +12,9 @@ from .models import Comment, ContributorProfile, RockCannon, RockCannonPhoto
 
 def home(request):
     return render(request, "hello/home.html")
+
+def about(request):
+    return render(request, "hello/about.html")
 
 
 def docs(request):
@@ -25,25 +29,30 @@ def docs(request):
 
 
 def map_view(request):
-    cannons = RockCannon.objects.all().order_by("name")
-    return render(request, "hello/map.html", {"cannons": cannons})
-
-
-def cannon_list(request):
-    cannons = RockCannon.objects.all().order_by("name")
+    cannons = RockCannon.objects.prefetch_related("photos").order_by("name")
     return render(
         request,
-        "hello/cannon_list.html",
-        {"cannons": cannons},
+        "hello/map.html",
+        {
+            "cannons": cannons,
+            "maptiler_api_key": settings.MAPTILER_API_KEY,
+        },
     )
+
+
+def filler(request):
+    return render(request, "hello/filler.html")
 
 
 def cannon_detail(request, slug):
     cannon = get_object_or_404(
-        RockCannon.objects.prefetch_related(
-            "photos",
+        RockCannon.objects.select_related("created_by").prefetch_related(
+            Prefetch("photos", queryset=RockCannonPhoto.objects.select_related("uploaded_by").order_by("-uploaded_at")),
             "trails",
-            Prefetch("comments", queryset=Comment.objects.filter(is_deleted=False).order_by("-created_at")),
+            Prefetch(
+                "comments",
+                queryset=Comment.objects.filter(is_deleted=False).select_related("user").order_by("-created_at"),
+            ),
         ),
         slug=slug,
     )
@@ -52,30 +61,43 @@ def cannon_detail(request, slug):
     return render(
         request,
         "hello/cannon_detail.html",
-        {"cannon": cannon, "comment_form": comment_form, "photo_form": photo_form},
+        {
+            "cannon": cannon,
+            "comment_form": comment_form,
+            "photo_form": photo_form,
+            "maptiler_api_key": settings.MAPTILER_API_KEY,
+        },
     )
 
 
 def gallery(request):
-    photos = RockCannonPhoto.objects.select_related("rock_cannon").order_by("-uploaded_at")
+    photos = RockCannonPhoto.objects.select_related("rock_cannon", "uploaded_by").order_by("-uploaded_at")
     return render(request, "hello/gallery.html", {"photos": photos})
 
 
+@login_required
 def upload_cannon(request):
     if request.method == "POST":
-        form = RockCannonForm(request.POST)
+        form = RockCannonForm(request.POST, request.FILES)
         if form.is_valid():
             cannon = form.save(commit=False)
             if request.user.is_authenticated:
                 cannon.created_by = request.user
             cannon.save()
             form.save_m2m()
+            for image in request.FILES.getlist("photos"):
+                RockCannonPhoto.objects.create(
+                    rock_cannon=cannon,
+                    image=image,
+                    uploaded_by=request.user if request.user.is_authenticated else None,
+                )
             return redirect("cannon_detail", slug=cannon.slug)
     else:
         form = RockCannonForm()
     return render(request, "hello/upload_cannon.html", {"form": form})
 
 
+@login_required
 def upload_photo(request):
     if request.method != "POST":
         raise Http404()
@@ -91,7 +113,7 @@ def upload_photo(request):
     if rock_cannon_id:
         cannon = get_object_or_404(RockCannon, id=rock_cannon_id)
         return redirect("cannon_detail", slug=cannon.slug)
-    return redirect("cannon_list")
+    return redirect("map_view")
 
 
 def add_comment(request, slug):
@@ -111,6 +133,22 @@ def add_comment(request, slug):
 def profile(request):
     profile_obj, _ = ContributorProfile.objects.get_or_create(user=request.user)
     if request.method == "POST":
+        if request.POST.get("clear_profile_picture") == "1":
+            profile_obj.profile_picture = None
+            profile_obj.profile_picture_data = None
+            profile_obj.profile_picture_content_type = ""
+            profile_obj.save()
+            return redirect("profile")
+
+        if request.POST.get("change_profile_picture") == "1":
+            uploaded_picture = request.FILES.get("profile_picture")
+            if uploaded_picture:
+                profile_obj.profile_picture = uploaded_picture
+                profile_obj.profile_picture_data = None
+                profile_obj.profile_picture_content_type = ""
+                profile_obj.save()
+            return redirect("profile")
+
         form = ProfileForm(request.POST, request.FILES, instance=profile_obj)
         if form.is_valid():
             form.save()

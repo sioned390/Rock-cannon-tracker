@@ -2,25 +2,47 @@
 {% load i18n %}
 
 {% block title %}{% trans "Gallery" %}{% endblock %}
+{% block body_class %}gallery-page{% endblock %}
 
 {% block content %}
-<div class="card">
-    <h1>{% trans "Rock Cannon Gallery" %}</h1>
-    <p class="muted">{% trans "Browse photos uploaded by contributors." %}</p>
-</div>
 
-<div class="grid">
-    {% for photo in photos %}
-        <div class="card">
-            <img class="responsive" src="{% url 'photo_image' photo.id %}" alt="{{ photo.caption }}" />
-            <h3>{{ photo.rock_cannon.name }}</h3>
-            <p class="muted">{{ photo.caption }}</p>
-            <a class="btn" href="{% url 'cannon_detail' photo.rock_cannon.slug %}">{% trans "View rock cannon" %}</a>
-        </div>
-    {% empty %}
-        <div class="card">
-            <p class="muted">{% trans "No photos yet." %}</p>
-        </div>
-    {% endfor %}
-</div>
+
+{% if photos %}
+    <section class="gallery-masonry" aria-label="{% trans 'Rock cannon photo gallery' %}">
+        {% for photo in photos %}
+            <article class="gallery-item">
+                <img
+                    src="{% url 'photo_image' photo.id %}"
+                    alt="{{ photo.caption|default:photo.rock_cannon.name }}"
+                    loading="lazy"
+                />
+                <div class="gallery-item__overlay">
+                    <div class="gallery-item__meta">
+                        <h3>{{ photo.rock_cannon.name }}</h3>
+                        {% if photo.uploaded_by %}
+                            <p>
+                                {% blocktrans with uploader=photo.uploaded_by.username %}
+                                    Uploaded by {{ uploader }}
+                                {% endblocktrans %}
+                            </p>
+                        {% else %}
+                            <p>{% trans "Uploaded by Unknown user" %}</p>
+                        {% endif %}
+                    </div>
+                    <a
+                        class="gallery-item__expand"
+                        href="{% url 'cannon_detail' photo.rock_cannon.slug %}"
+                        aria-label="{% blocktrans with cannon_name=photo.rock_cannon.name %}Open {{ cannon_name }} details{% endblocktrans %}"
+                    >
+                        <i class="fa-solid fa-expand"></i>
+                    </a>
+                </div>
+            </article>
+        {% endfor %}
+    </section>
+{% else %}
+    <div class="card">
+        <p class="muted">{% trans "No photos yet." %}</p>
+    </div>
+{% endif %}
 {% endblock %}

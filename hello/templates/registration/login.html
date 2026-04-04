@@ -3,14 +3,16 @@
 
 {% block title %}{% trans "Sign in" %}{% endblock %}
 
+{% block body_class %}auth-page login-page{% endblock %}
+
 {% block content %}
-<div class="card">
+<div class="card auth-card">
     <h1>{% trans "Sign in" %}</h1>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <button class="btn" type="submit">{% trans "Sign in" %}</button>
     </form>
-    <p class="muted">{% trans "Need an account?" %} <a href="{% url 'signup' %}">{% trans "Create one" %}</a>.</p>
+    <p class="muted auth-switch">{% trans "Need an account?" %} <a href="{% url 'signup' %}">{% trans "Create one" %}</a>.</p>
 </div>
 {% endblock %}

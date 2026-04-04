@@ -4,9 +4,9 @@ from hello import views
 
 urlpatterns = [
     path("", views.home, name="home"),
-    path("docs/", views.docs, name="docs"),
+    path("about/", views.about, name="about"),
     path("map/", views.map_view, name="map_view"),
-    path("cannons/", views.cannon_list, name="cannon_list"),
+    path("map/filler/", views.filler, name="filler"),
     path("cannons/<slug:slug>/", views.cannon_detail, name="cannon_detail"),
     path("gallery/", views.gallery, name="gallery"),
     path("upload/", views.upload_cannon, name="upload_cannon"),
