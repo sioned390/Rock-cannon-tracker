@@ -1,12 +1,12 @@
 from django.contrib import admin
 
 from .models import (
-	BanAppeal,
+
 	Comment,
 	ContributorProfile,
 	RockCannon,
 	RockCannonPhoto,
-	Trail,
+	
 )
 
 
@@ -17,10 +17,6 @@ class RockCannonPhotoInline(admin.TabularInline):
 
 
 
-
-class TrailInline(admin.TabularInline):
-	model = Trail
-	extra = 0
 
 
 @admin.register(RockCannon)
@@ -51,8 +47,5 @@ class ContributorProfileAdmin(admin.ModelAdmin):
 	list_filter = ["is_moderator"]
 
 
-@admin.register(BanAppeal)
-class BanAppealAdmin(admin.ModelAdmin):
-	list_display = ["user", "status", "created_at"]
-	list_filter = ["status"]
+
 

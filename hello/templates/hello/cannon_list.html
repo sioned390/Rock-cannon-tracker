@@ -1,26 +1,57 @@
 {% extends 'hello/base.html' %}
 {% load i18n %}
 
-{% block title %}Rock Cannon Tracker{% endblock %}
+{% block title %}{% trans "Rock Cannon Tracker" %}{% endblock %}
+{% block body_class %}gallery-page{% endblock %}
 
 {% block content %}
-<div class="card">
+<section class="card cannon-list-hero">
     <h1>{% trans "Rock Cannons" %}</h1>
-</div>
+    <p class="muted">{% blocktrans with count=cannons|length %}Browse {{ count }} cannon sites with quick details and direct links to each page.{% endblocktrans %}</p>
 
-<div class="grid">
+    <form class="cannon-list-search" method="get" action="{% url 'cannon_list' %}" role="search">
+        <label class="cannon-list-search__label" for="cannon-list-query">{% trans "Search cannons" %}</label>
+        <div class="cannon-list-search__row">
+            <input
+                id="cannon-list-query"
+                type="search"
+                name="q"
+                value="{{ search_query }}"
+                placeholder="{% trans 'Search by cannon name' %}"
+            />
+            <button class="btn" type="submit">{% trans "Search" %}</button>
+            {% if search_query %}
+                <a class="btn cannon-list-search__clear" href="{% url 'cannon_list' %}">{% trans "Clear" %}</a>
+            {% endif %}
+        </div>
+    </form>
+</section>
+
+<section class="cannon-list-grid">
     {% for cannon in cannons %}
-        <div class="card">
-            <h3>{{ cannon.name }}</h3>
+        <article class="card cannon-list-card">
+            <h2>{{ cannon.name }}</h2>
             <p class="muted">{{ cannon.summary|default:_('No summary yet') }}</p>
-            <div style="margin-top: 1rem;">
+
+            <dl class="cannon-list-meta">
+                <div>
+                    <dt>{% trans "Status" %}</dt>
+                    <dd>{{ cannon.get_status_display }}</dd>
+                </div>
+                <div>
+                    <dt>{% trans "Photos" %}</dt>
+                    <dd>{{ cannon.photo_total }}</dd>
+                </div>
+            </dl>
+
+            <div class="cannon-list-card__actions">
                 <a class="btn" href="{% url 'cannon_detail' cannon.slug %}">{% trans "View details" %}</a>
             </div>
-        </div>
+        </article>
     {% empty %}
-        <div class="card">
+        <div class="card cannon-list-empty">
             <p class="muted">{% trans "No rock cannons found." %}</p>
         </div>
     {% endfor %}
-</div>
+</section>
 {% endblock %}

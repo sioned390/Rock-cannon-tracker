@@ -11,6 +11,11 @@
 {% block content %}
 <section class="detail-header-row">
     <a class="detail-pill detail-pill--back" href="{% url 'map_view' %}"><i class="fa-solid fa-chevron-left"></i> {% trans "Back" %}</a>
+    {% if request.user.is_authenticated %}
+        {% if request.user.is_superuser or request.user == cannon.created_by or not cannon.created_by %}
+            <a class="detail-pill" href="{% url 'edit_cannon' cannon.slug %}"><i class="fa-solid fa-pen"></i> {% trans "Edit" %}</a>
+        {% endif %}
+    {% endif %}
     <h1 class="detail-pill detail-pill--title">{{ cannon.name }}</h1>
     <p class="detail-pill detail-pill--user">
         {% if cannon.created_by %}
@@ -80,10 +85,6 @@
                 <dt>{% trans "Photos" %}</dt>
                 <dd>{{ cannon.photos.count }}</dd>
             </div>
-            <div>
-                <dt>{% trans "Trails" %}</dt>
-                <dd>{{ cannon.trails.count }}</dd>
-            </div>
         </dl>
     </aside>
 </section>
@@ -92,21 +93,7 @@
     <article class="card detail-history-card">
         <h2>{% trans "History & Info" %}</h2>
         <p>{{ cannon.summary|default:_('No information yet.') }}</p>
-        <p>{{ cannon.history|default:_('No history added yet.') }}</p>
 
-        <h3>{% trans "Walking & hiking trails" %}</h3>
-        <ul class="detail-trails-list">
-            {% for trail in cannon.trails.all %}
-                <li>
-                    <span>{{ trail.name }}</span>
-                    {% if trail.map_url %}
-                        <a href="{{ trail.map_url }}" target="_blank" rel="noopener noreferrer">{% trans "Map link" %}</a>
-                    {% endif %}
-                </li>
-            {% empty %}
-                <li class="muted">{% trans "No trail data yet." %}</li>
-            {% endfor %}
-        </ul>
     </article>
 
     <aside class="card detail-mini-map-card">

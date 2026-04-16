@@ -1,9 +1,10 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.conf import settings
-from django.db.models import Prefetch
-from django.http import Http404, HttpResponse
+from django.db.models import Count, Prefetch, Q
+from django.http import Http404, HttpResponse, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils.translation import gettext as _
 from pathlib import Path
 
 from .forms import CommentForm, ProfileForm, RockCannonForm, RockCannonPhotoForm
@@ -23,7 +24,7 @@ def docs(request):
         with open(doc_path, "r") as f:
             documentation = f.read()
     except FileNotFoundError:
-        documentation = "Documentation file not found."
+        documentation = _("Documentation file not found.")
     
     return render(request, "hello/docs.html", {"documentation": documentation})
 
@@ -75,6 +76,24 @@ def gallery(request):
     return render(request, "hello/gallery.html", {"photos": photos})
 
 
+def cannon_list(request):
+    query = request.GET.get("q", "").strip()
+    cannons = RockCannon.objects.annotate(photo_total=Count("photos"))
+
+    if query:
+        cannons = cannons.filter(Q(name__icontains=query))
+
+    cannons = cannons.order_by("-created_at", "-id")
+    return render(
+        request,
+        "hello/cannon_list.html",
+        {
+            "cannons": cannons,
+            "search_query": query,
+        },
+    )
+
+
 @login_required
 def upload_cannon(request):
     if request.method == "POST":
@@ -95,6 +114,29 @@ def upload_cannon(request):
     else:
         form = RockCannonForm()
     return render(request, "hello/upload_cannon.html", {"form": form})
+
+
+@login_required
+def edit_cannon(request, slug):
+    cannon = get_object_or_404(RockCannon, slug=slug)
+
+    can_edit = (
+        request.user.is_superuser
+        or cannon.created_by_id == request.user.id
+        or cannon.created_by_id is None
+    )
+    if not can_edit:
+        return HttpResponseForbidden(_("You do not have permission to edit this cannon."))
+
+    if request.method == "POST":
+        form = RockCannonForm(request.POST, request.FILES, instance=cannon)
+        if form.is_valid():
+            updated_cannon = form.save()
+            return redirect("cannon_detail", slug=updated_cannon.slug)
+    else:
+        form = RockCannonForm(instance=cannon)
+
+    return render(request, "hello/edit_cannon.html", {"form": form, "cannon": cannon})
 
 
 @login_required

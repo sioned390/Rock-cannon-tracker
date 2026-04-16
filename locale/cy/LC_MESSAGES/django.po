@@ -310,11 +310,11 @@ msgstr "Agor manylion %(cannon_name)s"
 
 #: hello/templates/hello/home.html:11
 msgid "Beth yw Canonau Creigiau?"
-msgstr ""
+msgstr "Beth yw Canonau Creigiau?"
 
 #: hello/templates/hello/home.html:16
 msgid "Ewch i'r Map"
-msgstr ""
+msgstr "Ewch i'r Map"
 
 #: hello/templates/hello/home.html:24
 msgid ""
@@ -486,3 +486,37 @@ msgstr "Saesneg"
 #: web_project/settings.py:114
 msgid "Welsh"
 msgstr "Cymraeg"
+
+msgid "Rock Cannon Tracker"
+msgstr "Traciwr Canonau Cerrig"
+
+msgid "Toggle navigation"
+msgstr "Toglo llywio"
+
+msgid "Cymraeg"
+msgstr "Cymraeg"
+
+msgid "Documentation file not found."
+msgstr "Heb ddod o hyd i'r ffeil ddogfennaeth."
+
+msgid "You do not have permission to edit this cannon."
+msgstr "Nid oes gennych ganiatâd i olygu'r canon hwn."
+
+msgid "List"
+msgstr "Rhestr"
+
+msgid "Search cannons"
+msgstr "Chwilio canonau"
+
+msgid "Search"
+msgstr "Chwilio"
+
+msgid "Clear"
+msgstr "Clirio"
+
+msgid "Search by cannon name"
+msgstr "Chwilio yn ôl enw canon"
+
+#, python-format
+msgid "Browse %(count)s cannon sites with quick details and direct links to each page."
+msgstr "Pori %(count)s safle canon gyda manylion cyflym a dolenni uniongyrchol i bob tudalen."

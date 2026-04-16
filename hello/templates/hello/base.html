@@ -4,7 +4,7 @@
 <head>
  <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{% block title %}Rock Cannon Tracker{% endblock %}</title>
+    <title>{% block title %}{% trans "Rock Cannon Tracker" %}{% endblock %}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -16,9 +16,9 @@
     <header>
         <nav>
             <div class="nav-brand">
-                <a href="{% url 'home' %}">Rock Cannon Tracker</a>
+                <a href="{% url 'home' %}">{% trans "Rock Cannon Tracker" %}</a>
             </div>
-            <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav-links" aria-label="Toggle navigation">
+            <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav-links" aria-label="{% trans 'Toggle navigation' %}">
                 <i class="fa-solid fa-bars"></i>
             </button>
             <div class="nav-links" id="site-nav-links">
@@ -27,6 +27,7 @@
                     <summary>{% trans "Browse" %}</summary>
                     <div class="nav-dropdown__menu nav-dropdown__menu--right">
                         <a href="{% url 'map_view' %}"><i class="fa-solid fa-map-location"></i> {% trans "Map" %}</a>
+                        <a href="{% url 'cannon_list' %}"><i class="fa-solid fa-list"></i> {% trans "List" %}</a>
                         <a href="{% url 'gallery' %}"><i class="fa-solid fa-images"></i> {% trans "Gallery" %}</a>
                     </div>
                 </details>
@@ -55,10 +56,10 @@
                     {% get_current_language as CURRENT_LANG %}
                     {% if CURRENT_LANG == 'cy' %}
                         <input name="language" type="hidden" value="en" />
-                        <button class="btn" type="submit">English</button>
+                        <button class="btn" type="submit">{% trans "English" %}</button>
                     {% else %}
                         <input name="language" type="hidden" value="cy" />
-                        <button class="btn" type="submit">Cymraeg</button>
+                        <button class="btn" type="submit">{% trans "Cymraeg" %}</button>
                     {% endif %}
                 </form>
             </div>
